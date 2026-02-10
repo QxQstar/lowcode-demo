@@ -1,0 +1,22 @@
+{
+  "name": "vitis-lowcode-types",
+  "version": "1.0.0",
+  "description": "Types for Vitis lowCode engine",
+  "type": "module",
+  "main": "./dist/index.es.js",
+  "module": "./dist/index.es.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "dev": "vite build --watch"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.5",
+    "eventemitter3": "^5.0.4",
+    "vite": "^6.0.0",
+    "vite-plugin-dts": "^4.5.0"
+  }
+}

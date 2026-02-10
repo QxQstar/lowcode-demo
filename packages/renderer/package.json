@@ -1,0 +1,44 @@
+{
+  "name": "vitis-lowcode-renderer",
+  "version": "0.0.1",
+  "description": "vitis 渲染器",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.es.js",
+  "module": "./dist/index.es.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "dev": "vite build --watch",
+    "preview": "vite preview --port 3000"
+  },
+  "dependencies": {
+    "mobx": "^6.5.0",
+    "mobx-react-lite": "^4.1.1",
+    "eventemitter3": "^4.0.7",
+    "vitis-lowcode-types": "workspace:*",
+    "qs": "^6.11.0",
+    "axios": "^1.2.2",
+    "depath": "^1.0.6",
+    "antd": "^6.1.1"
+  },
+  "devDependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3",
+    "fs-extra": "^10.0.0",
+    "@types/qs": "^6.9.7",
+    "@types/axios": "^0.14.0",
+    "@vitejs/plugin-react": "^5.1.3",
+    "vite": "^7.3.1",
+    "vite-plugin-dts": "^4.5.4"
+  },
+   "peerDependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "architecture-monorepo",
+  "private": true,
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build --filter=!app",
+    "preview": "turbo run preview --filter=vitis-lowcode-renderer"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "devDependencies": {
+    "turbo": "latest"
+  }
+}

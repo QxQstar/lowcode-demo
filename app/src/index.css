@@ -1,0 +1,6 @@
+@import "tailwindcss";
+@source "../node_modules/vitis-lowcode-engine/dist/*.js";
+
+html,body {
+  height: 100%;
+}
