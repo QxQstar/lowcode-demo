@@ -1,9 +1,8 @@
 import { makeAutoObservable,  } from 'mobx';
 import { ElementType } from 'react'
-import { DesignerSpec } from 'vitis-lowcode-types'
+import { DesignerSpec, ComponentSpecRaw } from 'vitis-lowcode-types'
 
 import ComponentSpec from './componentSpec'
-import { innerMaterial } from '../shell'
 import { Dragon, isDragDataNode } from './dragon'
 import Host from './host'
 import Detection from './detection';
@@ -11,6 +10,7 @@ import type Project from './index'
 import Viewport from './viewport'
 import { LocationEvent } from '../types'
 import SettingTopEntry from '../setting/SettingTopEntry'
+import { PageComponentsSpec } from '../defaultConfig/asset'
 export default class Designer implements DesignerSpec {
     componentSpecMap: Map<string, ComponentSpec> = new Map()
     componentImplMap: Map<string, ElementType> = new Map()
@@ -34,15 +34,12 @@ export default class Designer implements DesignerSpec {
         this.project = project
         this.host = new Host(project)
         this.viewport = new Viewport()
+        this.componentSpecMap.set('Page', new ComponentSpec(PageComponentsSpec))
     }
 
-    buildComponentSpecMap = (packageNames: string[]) => {
-        packageNames.forEach(packageName => {
-            const result = innerMaterial.getComponentSpecRaw(packageName)
-
-            if (result) {
-                this.componentSpecMap.set(packageName, new ComponentSpec(result))
-            }
+    buildComponentsSpec = (specs: ComponentSpecRaw[]) => {
+        specs.forEach(spec => {
+            this.componentSpecMap.set(spec.componentName, new ComponentSpec(spec))
         })
     }
 

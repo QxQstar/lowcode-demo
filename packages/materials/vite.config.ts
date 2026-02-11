@@ -11,8 +11,11 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: 'src/index.tsx',
-      fileName: 'index.es',
+      entry: {
+        index: 'src/index.ts',
+        meta: 'meta/index.ts',
+      },
+      fileName: (format, entryName) => `${entryName}.${format}.js`,
       formats: ['es'],
     },
     rollupOptions: {
@@ -21,10 +24,6 @@ export default defineConfig({
         'react-dom',
         'react/jsx-runtime',
         'react-dom/client',
-        'antd',
-        '@ant-design/icons',
-        'vitis-lowcode-monaco-editor',
-        'vitis-lowcode-types'
       ],
     },
   },

@@ -1,5 +1,6 @@
 import type EventEmitter from 'eventemitter3';
 import type { ElementType } from 'react'
+import type { ComponentSpecRaw } from './material'
 import type{ PageSchema, LifeCycles, JSFunction, Interceptors } from './schema'
 
 export interface ProjectSpec extends EventEmitter {
@@ -7,7 +8,9 @@ export interface ProjectSpec extends EventEmitter {
     getLifeCycles(): LifeCycles
     getInterceptors(): Interceptors | undefined
     updateInterceptors(name: keyof Interceptors, value: JSFunction): void
-    getSchema(): PageSchema
+    getSchema(): PageSchema;
+    setAssets(specs: ComponentSpecRaw[]): void;
+    setSchema(s: PageSchema): void;
 }
 
 export interface ObservableProjectSpec {
@@ -16,5 +19,6 @@ export interface ObservableProjectSpec {
 }
 
 export interface DesignerSpec {
-    componentImplMap: Map<string, ElementType>
+    componentImplMap: Map<string, ElementType>;
+    buildComponentsSpec(specs: ComponentSpecRaw[]): void
 }

@@ -20,8 +20,9 @@ export default class Host implements HostSpec {
     onAssetUpdated = async (additionalPackageNames: string[]) => {
         const materialMap = new Map<string, ComponentSpecRaw>()
         additionalPackageNames.forEach(name => {
-            if (material.has(name)) {
-                materialMap.set(name, material.get(name)!)
+            const spec = material.getComponentSpecRaw(name)
+            if (spec) {
+                materialMap.set(name, spec)
             }
         })
         const assetBundles = this.getSimulatorComponentAssets(materialMap);

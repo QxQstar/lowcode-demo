@@ -1,6 +1,5 @@
 import type { SettersSpec } from './setter'
 import type { SkeletonSpec } from './skeleton'
-import type { MaterialSpec } from './material'
 
 export interface  PluginConfig{
     init(): void;
@@ -24,7 +23,6 @@ export interface PluginContext{
     skeleton: SkeletonSpec;
     plugins: PluginManagerSpec;
     setters: SettersSpec;
-    material: MaterialSpec;
 }
 
 export interface LowCodePlugin {
