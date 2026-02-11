@@ -3,11 +3,10 @@
   "private": true,
   "scripts": {
     "dev": "turbo dev",
-    "build": "turbo build --filter=!app",
-    "preview": "turbo run preview --filter=vitis-lowcode-renderer"
+    "build": "turbo build --filter=!app"
   },
   "packageManager": "pnpm@9.0.0",
   "devDependencies": {
-    "turbo": "latest"
+    "turbo": "^2.6.3"
   }
 }

@@ -10,7 +10,6 @@ import { createRoot } from 'react-dom/client'
 
 import { getHost, deferUtil } from './utils'
 
-const host = getHost()
 
 class SimulatorRenderer implements SimulatorSpec {
     private isRan: boolean = false
@@ -50,14 +49,22 @@ class SimulatorRenderer implements SimulatorSpec {
         return elem.getAttribute('data-node-id') || undefined
     }
 
+    toggleLoading = (show: boolean) => {
+        const loading = document.getElementById('loadingWarp')
+        if (loading) {
+            loading.style.display = show ? 'flex': 'none'
+        }
+    }
+
     rerender = async () => {
-        console.log(host,'ddd')
-        observerData.components = host.project.designer.componentImplMap,
-        observerData.schema = host.project.schema
+        const host = getHost()
+        observerData.components = host?.project.designer.componentImplMap,
+        observerData.schema = host?.project.schema
         await deferUtil.waitMounted()
     }
 
     run() {
+        this.toggleLoading(false)
         if (this.isRan) {
             return
         }

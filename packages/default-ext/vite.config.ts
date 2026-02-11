@@ -13,7 +13,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: 'src/index.tsx',
-      fileName: 'index.es.js',
+      fileName: 'index.es',
       formats: ['es'],
     },
     rollupOptions: {

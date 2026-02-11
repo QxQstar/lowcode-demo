@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
 import path, { resolve } from 'path';
-import { vitePluginBuildEntry } from './scripts/vite-plugin-separate-build'
+import { vitePluginBuildEntry } from './vite-plugin-separate-build'
 
 export default defineConfig({
   plugins: [
@@ -11,7 +11,7 @@ export default defineConfig({
       rollupTypes: true,
     }),
     vitePluginBuildEntry({
-      canvas: resolve(__dirname, "./scripts/canvas-vite.config.ts")
+      canvas: resolve(__dirname, "./canvas-vite.config.ts")
     })
   ],
   build: {
@@ -26,11 +26,6 @@ export default defineConfig({
         'react-dom',
         'react/jsx-runtime',
         'react-dom/client',
-        'antd',
-        '@ant-design/icons',
-        'vitis-lowcode-default-ext',
-        'vitis-lowcode-types',
-        'vitis-lowcode-renderer'
       ],
     },
   },

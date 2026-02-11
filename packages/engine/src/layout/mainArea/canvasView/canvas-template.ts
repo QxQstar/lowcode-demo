@@ -1,5 +1,4 @@
 import canvasScript from '../../../builtin-simulator/index?build=canvas'
-
 const canvasHtml = `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -258,7 +257,7 @@ const canvasHtml = `<!DOCTYPE html>
     </style>
   </head>
   <body class="design-canvas" id="app">
-    <div class="loading-warp">
+    <div class="loading-warp" id="loadingWarp">
       <div class="loading">
         <div><span></span></div>
         <div><span></span></div>

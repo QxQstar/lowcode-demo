@@ -5,6 +5,6 @@ import { getHost } from './utils'
 const host = getHost()
 
 export default observable<Pick<IRendererProps ,'components' | 'schema'>>({
-    components: host.project.designer.componentImplMap,
-    schema: host.project.schema
+    components: host?.project?.designer?.componentImplMap || new Map(),
+    schema: host?.project?.schema
 })

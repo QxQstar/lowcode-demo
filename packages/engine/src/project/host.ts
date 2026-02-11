@@ -1,8 +1,8 @@
 import { project, material, setters } from "../shell"
-import { DRAG_OVER, ASSET_UPDATED } from '../eventType'
+import { DRAG_OVER } from '../eventType'
 import type Project from "./index"
 import { HostSpec, SimulatorSpec, ComponentSpecRaw, Point } from 'vitis-lowcode-types'
-import { getComponentImplUrl, getBaseAssets, getComponentSetterMap, getComponentImplFromWin } from '../utils'
+import { getComponentImplUrl, getComponentSetterMap, getComponentImplFromWin } from '../utils'
 import { isDragDataNode } from './dragon'
 import { DragObjectType } from "../types"
 
@@ -63,10 +63,14 @@ export default class Host implements HostSpec {
 
         frame.addEventListener('load', () => {
             this.frameWindow!.LCSimulatorHost = this
-            this.renderer = this.frameWindow!.SimulatorRenderer;
-            console.log('ddddd', this.renderer)
-            this.setupEvent()
-            this.renderer?.run()
+
+             const renderer = this.frameWindow!.SimulatorRenderer
+            if (renderer) {
+                this.renderer = renderer
+                this.setupEvent()
+                this.renderer?.rerender()
+                this.renderer?.run()
+            }
         })
         
 
@@ -197,66 +201,16 @@ export default class Host implements HostSpec {
         this.project.designer.addComponentsImpl(componentMap)
     }
 
-    private createSimulator = async () => {
-        const assetBundles = this.getSimulatorComponentAssets(material.getAll());
-        const baseAssets = getBaseAssets()
-
-        // 这个属性在渲染器环境内部访问
-        this.frameWindow!.LCSimulatorHost = this
-        let styleTags = ''
-        let scriptTags = ''
-        baseAssets.css.forEach(url => {
-            styleTags += `<link href="${url}" rel="stylesheet" />`
-        })
-        baseAssets.js.forEach(url => {
-            scriptTags += `<script src="${url}"></script>`
-        })
-
-        assetBundles.forEach(bundle => {
-            scriptTags += `<script src="${bundle.url}"></script>`
-        })
-
-        this.frameDocument!.open()
-        this.frameDocument!.write(
-            `<!doctype html>
-            <html class="engine-design-mode">
-            <head><meta charset="utf-8"/>
-                ${styleTags}
-            </head>
-            <body>
-                ${scriptTags}
-            </body>
-            </html>`
-        )
-        this.frameDocument!.close()
-
-        return new Promise<SimulatorSpec>((resolve, rejected) => {
-            const loaded = () => {
-              this.registerComponentSetters(assetBundles)
-              this.collectComponentImpl(assetBundles)
-              resolve(this.frameWindow!.SimulatorRenderer);
-              this.frameWindow!.removeEventListener('load', loaded);
-            };
-
-            const errored = () => {
-                rejected()
-                this.frameWindow!.removeEventListener('error', errored);
-            }
-            this.frameWindow!.addEventListener('load', loaded);
-            this.frameWindow!.addEventListener('error', errored);
-        });
-    }
-
     getClosestNodeByLocation = (point: Point) => {
-        const id = this.renderer.getClosestNodeIdByLocation(point)
+        const id = this.renderer?.getClosestNodeIdByLocation(point)
         return id ? this.project.documentModel.getNode(id): undefined
     }
 
     getNodeRect = (nodeId: string) => {
-        return this.renderer.getNodeRect(nodeId)
+        return this.renderer?.getNodeRect(nodeId)
     }
 
     rerender = async () => {
-        await this.renderer.rerender()
+        await this.renderer?.rerender()
     }
 }

@@ -1,4 +1,5 @@
 import { build } from 'vite'
+import type { Plugin } from 'vite'
 
 const buildRE = /(?:\?|&)build=(?<name>.*?)(?:&|$)/
 const queryRE = /[?#].*$/
@@ -13,6 +14,8 @@ async function bundleBuildEntry(config: any, options: any) {
     configFile: viteConfigFile,
     mode: config.mode,
     build: {
+      write: false,
+      emptyOutDir: false,
       rollupOptions: {
         input: options.entries
       }
@@ -31,11 +34,11 @@ async function bundleBuildEntry(config: any, options: any) {
   return outputChunk
 }
 
-export async function vitePluginBuildEntry(customBuildConfig) {
-  let config
+export async function vitePluginBuildEntry(customBuildConfig: Record<string, string>) {
+  let config: any;
   return {
     name: 'vite-plugin-build-entry',
-    apply: 'build' as const,
+    apply: 'build' as const, 
     enforce: 'pre' as const,
     configResolved(resolveConfig) {
       config = resolveConfig
