@@ -21,6 +21,5 @@ export interface ObservableProjectSpec {
 }
 
 export interface DesignerSpec {
-    componentImplMap: Map<string, ElementType>;
     buildComponents(specs: MaterialPackage): void
 }

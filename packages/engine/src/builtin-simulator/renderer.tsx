@@ -1,10 +1,10 @@
 import { NodeSchema, SimulatorSpec, Point } from 'vitis-lowcode-types'
-import { createElement } from 'react'
 import { RendererMode } from 'vitis-lowcode-renderer'
 import reactDomCollector, { DomNode } from './reactInstanceCollector'
 import { EmptyComponent } from './emptyComponent/page'
 import SimulatorRendererView from './view'
 import observerData from './store'
+import { loader } from './loader'
 
 import { createRoot } from 'react-dom/client'
 
@@ -56,9 +56,12 @@ class SimulatorRenderer implements SimulatorSpec {
         }
     }
 
+    loadAssets(urls: string[]) {
+        loader.loadAssets(urls)
+    }
+
     rerender = async () => {
         const host = getHost()
-        observerData.components = host?.project.designer.componentImplMap,
         observerData.schema = host?.project.schema
         await deferUtil.waitMounted()
     }
@@ -81,19 +84,19 @@ class SimulatorRenderer implements SimulatorSpec {
 
         const root = createRoot(container)
         root.render(
-            createElement(SimulatorRendererView, {
-                rendererMode: RendererMode.design,
-                onCompGetRef: (schema: NodeSchema, domElement: HTMLElement | null) => {
+            <SimulatorRendererView
+                rendererMode={RendererMode.design}
+                onCompGetRef={(schema: NodeSchema, domElement: HTMLElement | null) => {
                     reactDomCollector.mount(schema.id!, domElement)
-                },
-                customEmptyElement: (schema: NodeSchema) => {
+                }}
+                customEmptyElement={(schema: NodeSchema) => {
                     if (schema.containerType === 'Page') {
                         return <EmptyComponent text='将布局组件拖拽到这里'/>
                     } else if (schema.containerType === 'Layout') {
                         return <EmptyComponent text='拖入组件'/>
                     }
-                },
-            },null)
+                }}
+            />
         )
     }
 }
