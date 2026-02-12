@@ -1,6 +1,6 @@
 import { makeAutoObservable,  } from 'mobx';
 import { ElementType } from 'react'
-import { DesignerSpec, ComponentSpecRaw } from 'vitis-lowcode-types'
+import { DesignerSpec, MaterialPackage } from 'vitis-lowcode-types'
 
 import ComponentSpec from './componentSpec'
 import { Dragon, isDragDataNode } from './dragon'
@@ -37,8 +37,8 @@ export default class Designer implements DesignerSpec {
         this.componentSpecMap.set('Page', new ComponentSpec(PageComponentsSpec))
     }
 
-    buildComponentsSpec = (specs: ComponentSpecRaw[]) => {
-        specs.forEach(spec => {
+    buildComponents = (specs: MaterialPackage) => {
+        specs.components.forEach(spec => {
             this.componentSpecMap.set(spec.componentName, new ComponentSpec(spec))
         })
     }

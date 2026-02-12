@@ -1,6 +1,6 @@
 import { EventEmitter } from 'eventemitter3';
 import type InterProject from '../project';
-import { ProjectSpec, LifeCycles, JSFunction, Interceptors, PageSchema, ComponentSpecRaw } from 'vitis-lowcode-types'
+import { ProjectSpec, LifeCycles, JSFunction, Interceptors, PageSchema, MaterialPackage } from 'vitis-lowcode-types'
 
 export default class Project extends EventEmitter implements ProjectSpec {
     private readonly project: InterProject
@@ -31,8 +31,8 @@ export default class Project extends EventEmitter implements ProjectSpec {
         return this.project.schema
     }
 
-    setAssets(specs: ComponentSpecRaw[]) {
-        this.project.designer.buildComponentsSpec(specs);
+    setAssets(specs: MaterialPackage) {
+        this.project.designer.buildComponents(specs);
     }
 
     setSchema(s: PageSchema) {

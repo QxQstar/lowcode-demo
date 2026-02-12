@@ -71,3 +71,9 @@ export interface ComponentSpecInstance {
   group: string;
   iconUrl: string;
 }
+
+export interface MaterialPackage {
+  url: string;
+  packageName: string;
+  components: ComponentSpecRaw[];
+}
