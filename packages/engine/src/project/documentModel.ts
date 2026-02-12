@@ -72,11 +72,11 @@ export default class DocumentModel {
         this.hoveredNodeId = id
     }
 
-    updateLifeCycles(name: keyof LifeCycles, value: JSFunction) {
+    updateLifeCycles(name: keyof LifeCycles, value?: JSFunction) {
         this.lifeCycles[name] = value
     }
 
-    updateInterceptors(name: keyof Interceptors, value: JSFunction) {
+    updateInterceptors(name: keyof Interceptors, value?: JSFunction) {
         if (!this.interceptors) {
             this.interceptors = {}
         }

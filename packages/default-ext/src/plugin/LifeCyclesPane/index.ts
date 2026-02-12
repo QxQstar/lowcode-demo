@@ -5,9 +5,11 @@ function LifeCyclesPane(ctx: PluginContext) {
     return {
         init() {
             ctx.skeleton.add({
+                type: 'panelDock',
                 name: "LifeCyclesPane",
                 content: Pane,
-                area: "left"
+                area: "left",
+                pluginContext: ctx
             })
         }
     }

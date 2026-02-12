@@ -5,9 +5,11 @@ function NetworkInterceptorsPane(ctx: PluginContext) {
     return {
         init() {
             ctx.skeleton.add({
+                type: 'panelDock',
                 name: "NetworkInterceptorsPane",
                 content: Pane,
-                area: "left"
+                area: "left",
+                pluginContext: ctx
             })
         }
     }

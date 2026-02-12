@@ -1,5 +1,7 @@
 import type { SettersSpec } from './setter'
 import type { SkeletonSpec } from './skeleton'
+import type { ProjectSpec } from './project'
+import type { DragonSpec }  from './dragon'
 
 export interface  PluginConfig{
     init(): void;
@@ -23,6 +25,8 @@ export interface PluginContext{
     skeleton: SkeletonSpec;
     plugins: PluginManagerSpec;
     setters: SettersSpec;
+    project: ProjectSpec;
+    dragon: DragonSpec;
 }
 
 export interface LowCodePlugin {

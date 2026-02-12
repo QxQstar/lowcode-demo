@@ -1,5 +1,4 @@
 import { project } from "../shell"
-import { DRAG_OVER } from '../eventType'
 import type Project from "./index"
 import { HostSpec, SimulatorSpec, Point } from 'vitis-lowcode-types'
 import { isDragDataNode } from './dragon'
@@ -44,7 +43,7 @@ export default class Host implements HostSpec {
     private setupEvent = () => {
         this.frameDocument?.addEventListener('dragover', (e: DragEvent) => {
             e.preventDefault()
-            project.emit(DRAG_OVER)
+            project.emit(project.DRAG_OVER)
             this.project.designer.dragon.onDragOver(e)
         })
 

@@ -8,7 +8,8 @@ function ComponentsPane(ctx: PluginContext) {
                 type: "panelDock",
                 name: "ComponentsPane",
                 content: Pane,
-                area: "left"
+                area: "left",
+                pluginContext: ctx
             })
         }
     }

@@ -5,9 +5,11 @@ function SchemaPane(ctx: PluginContext) {
     return {
         init() {
             ctx.skeleton.add({
+                type: 'panelDock',
                 name: "SchemaPane",
                 content: Pane,
-                area: "left"
+                area: "left",
+                pluginContext: ctx
             })
         }
     }

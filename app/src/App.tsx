@@ -1,5 +1,8 @@
 import { useRef, useEffect } from 'react'
-import { init } from 'vitis-lowcode-engine'
+import { init, setAssets } from 'vitis-lowcode-engine'
+import meta from 'vitis-lowcode-materials/meta'
+
+setAssets(meta)
 
 function App() {
   const box = useRef<HTMLDivElement>(null)

@@ -1,4 +1,5 @@
 import type { ElementType, ReactNode } from 'react'
+import type { PluginContext } from './plugins';
 
 export interface SkeletonSpec {
     add(config: WidgetConfig): WidgetSpec | undefined;
@@ -6,11 +7,11 @@ export interface SkeletonSpec {
 }
 
 export interface WidgetConfig {
+    type: 'panelDock' | 'panel' | 'widget'
     name: string;
     area: WidgetConfigArea;
     content: ElementType<any>;
-    contentProps?: Record<string, any>;
-    [extra: string]: any;
+    pluginContext: PluginContext;
 }
 
 export type WidgetConfigArea = 'left' | 'toolbar' | 'bottom' | 'topLeft' | 'topCenter' | 'topRight'

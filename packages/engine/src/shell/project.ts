@@ -4,12 +4,14 @@ import { ProjectSpec, LifeCycles, JSFunction, Interceptors, PageSchema, Componen
 
 export default class Project extends EventEmitter implements ProjectSpec {
     private readonly project: InterProject
+    SCHEMA_UPDATED = Symbol('SCHEMA_UPDATED')
+    DRAG_OVER = Symbol('DRAG_OVER')
     constructor(project: InterProject) {
         super()
         this.project = project
     }
 
-    updateLifeCycles = (name: keyof LifeCycles, value: JSFunction) => {
+    updateLifeCycles = (name: keyof LifeCycles, value?: JSFunction) => {
         this.project.updateLifeCycles(name, value)
     }
 
@@ -17,7 +19,7 @@ export default class Project extends EventEmitter implements ProjectSpec {
         return this.project.getLifeCycles()
     }
 
-    updateInterceptors = (name: keyof Interceptors, value: JSFunction) => {
+    updateInterceptors = (name: keyof Interceptors, value?: JSFunction) => {
         this.project.updateInterceptors(name, value)
     }
 
@@ -35,5 +37,9 @@ export default class Project extends EventEmitter implements ProjectSpec {
 
     setSchema(s: PageSchema) {
         this.project.setSchema(s)
+    }
+
+    get assets() {
+        return this.project.designer.componentSpecMap
     }
 }

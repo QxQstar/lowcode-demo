@@ -1,57 +1,88 @@
-import { useState,useLayoutEffect, useEffect } from "react"
+import { useState, useLayoutEffect, useEffect, useMemo, useCallback } from "react"
 import MonacoEditor from 'vitis-lowcode-monaco-editor'
 import { SnippetsOutlined } from '@ant-design/icons';
 import { Popover } from 'antd';
-import type { PageSchema } from 'vitis-lowcode-types'
+import type { PageSchema, PluginContext } from 'vitis-lowcode-types'
 
-export default function() {
-    const [active, setActive] = useState<boolean>(false);
-    const [height, setHeight] = useState<number>(0);
-    const [schema,setSchema] = useState<PageSchema>()
-    const [schemaJson,setSchemaJson] = useState<string>('')
+const EDITOR_PADDING_OFFSET = 130;
+
+export default function SchemaPane(props: PluginContext) {
+    const { project } = props;
+    const [isOpen, setIsOpen] = useState(false);
+    const [editorHeight, setEditorHeight] = useState(0);
+    const [pageSchema, setPageSchema] = useState<PageSchema>();
+
+    const updateHeight = useCallback(() => {
+        setEditorHeight(document.body.clientHeight - EDITOR_PADDING_OFFSET);
+    }, []);
 
     useLayoutEffect(() => {
-        setHeight(document.body.clientHeight - 130)
-    },[])
+        updateHeight();
+        window.addEventListener('resize', updateHeight);
+        return () => {
+            window.removeEventListener('resize', updateHeight);
+        };
+    }, [updateHeight]);
 
     useEffect(() => {
-        if (window.VitisLowCodeEngine) {
-            window.VitisLowCodeEngine.project.on(window.VitisLowCodeEngine.SCHEMA_UPDATED, () => {
-                setSchema(window.VitisLowCodeEngine.project.getSchema())
-            })
-        }
-    },[])
+        const handleSchemaUpdate = () => {
+            setPageSchema(project.getSchema());
+        };
 
-    useEffect(() => {
-        if(active) {
-            setSchemaJson(JSON.stringify(schema,undefined,2))
-        }
-    },[active,schema])
+        handleSchemaUpdate();
 
-    const onOpenChange = () => {
-        setActive(!active)
-    }
+        project.on(project.SCHEMA_UPDATED, handleSchemaUpdate);
+        
+        return () => {
+            project.off(project.SCHEMA_UPDATED, handleSchemaUpdate);
+        };
+    }, [project]);
+
+    const formattedSchema = useMemo(() => {
+        if (!pageSchema) return '';
+        try {
+            return JSON.stringify(pageSchema, undefined, 2);
+        } catch (error) {
+            console.error('Failed to stringify schema:', error);
+            return '{}';
+        }
+    }, [pageSchema]);
+
+    const handleOpenChange = useCallback((visible: boolean) => {
+        setIsOpen(visible);
+    }, []);
+
+    const editorOptions = useMemo(() => ({
+        readOnly: true,
+        height: `${editorHeight}px`,
+        minimap: { enabled: false },
+        automaticLayout: true,
+    }), [editorHeight]);
+
+    const popoverContent = (
+        <div className="w-[450px] overflow-hidden">
+            {isOpen && (
+                <MonacoEditor 
+                    key={editorHeight} 
+                    language="json" 
+                    value={formattedSchema} 
+                    options={editorOptions}
+                />
+            )}
+        </div>
+    );
 
     return (
         <div>
             <Popover 
                 trigger="click"
                 placement="rightTop"
-                content={
-                    <div className="w-[450px] overflow-auto">
-                        <MonacoEditor language="json" value={schemaJson} options={{
-                            readOnly:true,
-                            height: height + 'px'
-                        }}/>
-                    </div>
-                }
-                onOpenChange={onOpenChange}
-                open={active}
+                content={popoverContent}
+                onOpenChange={handleOpenChange}
+                open={isOpen}
             >
-                    <SnippetsOutlined />
+                <SnippetsOutlined />
             </Popover>
         </div>
-        
-
-    )
+    );
 }

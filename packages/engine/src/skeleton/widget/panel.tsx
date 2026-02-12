@@ -24,7 +24,7 @@ export default class Panel {
     }
 
     get content() {
-        return createElement(this.config.content, this.config.contentProps)
+        return createElement(this.config.content, this.config.pluginContext)
     }
 
     hide(): void {

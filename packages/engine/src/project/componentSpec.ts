@@ -1,7 +1,7 @@
-import { ComponentSpecRaw, NodeSchema, SetterConfig } from 'vitis-lowcode-types'
+import { ComponentSpecRaw, NodeSchema, SetterConfig, ComponentSpecInstance } from 'vitis-lowcode-types'
 import { FieldConfig, FieldGroupConfig, FieldSingleConfig } from '../types'
 
-export default class ComponentSpec {
+export default class ComponentSpec implements ComponentSpecInstance{
     configure: FieldConfig[] = [];
     rawData: ComponentSpecRaw
     extraProps: NodeSchema['extraProps']
@@ -21,6 +21,18 @@ export default class ComponentSpec {
 
     get componentName() {
         return this.rawData.componentName
+    }
+
+    get group() {
+        return this.rawData.group || 'base'
+    }
+
+    get iconUrl() {
+        return this.rawData.iconUrl
+    }
+
+    get packageName() {
+        return this.rawData.packageName
     }
 
     get unableDel() {

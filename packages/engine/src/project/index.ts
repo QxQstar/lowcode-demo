@@ -97,7 +97,7 @@ export default class Project  implements ObservableProjectSpec{
         this.documentModel.open(schema)
     }
 
-    updateLifeCycles = (name: keyof LifeCycles, value: JSFunction) => {
+    updateLifeCycles = (name: keyof LifeCycles, value?: JSFunction) => {
         this.documentModel.updateLifeCycles(name, value)
     }
 
@@ -105,7 +105,7 @@ export default class Project  implements ObservableProjectSpec{
         return this.documentModel.lifeCycles
     }
 
-    updateInterceptors = (name: keyof Interceptors, value: JSFunction) => {
+    updateInterceptors = (name: keyof Interceptors, value?: JSFunction) => {
         this.documentModel.updateInterceptors(name, value)
     }
 

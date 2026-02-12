@@ -1,14 +1,13 @@
 import { createElement } from 'react'
 import { createRoot } from 'react-dom/client'
 import { defaultPlugins, defaultSetters } from 'vitis-lowcode-default-ext'
-import { PageSchema } from 'vitis-lowcode-types'
+import { PageSchema, ComponentSpecRaw } from 'vitis-lowcode-types'
 
-import { plugins, setters } from './shell'
+import { plugins, setters, project } from './shell'
 import Root from './root'
 
 
 export { setters, skeleton, plugins, project, dragon } from './shell'
-export * from './eventType'
 
 (async function () {
     defaultPlugins.forEach(defaultPlugin => {
@@ -31,4 +30,8 @@ export function init(container?: HTMLElement) {
     }
     
     createRoot(container).render(createElement(Root))
+}
+
+export function setAssets(assets: ComponentSpecRaw[]) {
+    project.setAssets(assets);
 }

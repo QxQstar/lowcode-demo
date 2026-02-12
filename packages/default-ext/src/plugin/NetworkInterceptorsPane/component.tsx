@@ -1,12 +1,13 @@
-import { useState, useLayoutEffect } from "react"
-import type { Interceptors } from 'vitis-lowcode-types'
+import { useState, useMemo, useCallback } from "react"
+import type { Interceptors, PluginContext } from 'vitis-lowcode-types'
 import cn from 'classnames'
 import { Popover, Button } from 'antd';
 import { ClockCircleOutlined } from '@ant-design/icons';
 import MonacoEditor from 'vitis-lowcode-monaco-editor'
 
-const defaultConfig = {
+const INTERCEPTOR_CONFIG = {
     request: {
+        title: '请求拦截器',
         commit: `
         /**
            * axios 请求拦截器
@@ -28,6 +29,7 @@ const defaultConfig = {
         `
     },
     response: {
+        title: '响应拦截器',
         commit: `
         /**
             * axios 响应拦截器
@@ -48,76 +50,94 @@ const defaultConfig = {
         }
         `
     }
-}
+} as const;
 
-export default function () {
-    const [active, setActive] = useState<boolean>(false);
-    const [height, setHeight] = useState<number>(0);
-    const [ interceptors, setInterceptors ] = useState<Interceptors>(() => {
-        if (window.VitisLowCodeEngine) {
-            return window.VitisLowCodeEngine.project.getInterceptors()
-        } else {
-            return {}
-        }
+export default function NetworkInterceptorsPane(props: PluginContext) {
+    const { project } = props;
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [interceptors, setInterceptors] = useState<Interceptors | undefined>(() => {
+        return project.getInterceptors()
     });
 
-    useLayoutEffect(() => {
-        setHeight(document.body.clientHeight - 130)
-    },[])
-
-    const onOpenChange = () => {
-        setActive(!active)
-    }
-
-    const onChange = (name: keyof Interceptors) => (value: string) => {
-        if (window.VitisLowCodeEngine) {
-            window.VitisLowCodeEngine.project.updateInterceptors(name, {
-                type: 'JSFunction',
-                value
-            })
+    const handleOpenChange = (visible: boolean) => {
+        setIsOpen(visible);
+        if (visible) {
+            setInterceptors(project.getInterceptors());
         }
     }
 
-    const onAddLifeCycle = (name: keyof Interceptors) => () => {
-        setInterceptors({
-            ...interceptors,
-            [name]: {
-                type: 'JSFunction',
-                value: `
-                ${defaultConfig[name].commit}
-                ${defaultConfig[name].body}
-                `
-            }
-        })
+    const handleUpdateInterceptor = useCallback((name: keyof Interceptors, value: string) => {
+        const newInterceptor = {
+            type: 'JSFunction' as const,
+            value
+        };
+
+        project.updateInterceptors(name, newInterceptor);
+        
+        setInterceptors(prev => ({
+            ...prev,
+            [name]: newInterceptor
+        }));
+    }, [project]);
+
+    const handleAddInterceptor = (name: keyof Interceptors) => () => {
+        const config = INTERCEPTOR_CONFIG[name as keyof typeof INTERCEPTOR_CONFIG];
+        const value = `
+        ${config.commit}
+        ${config.body}
+        `;
+        handleUpdateInterceptor(name, value);
     } 
+
+    const handleEditorBlur = (name: keyof Interceptors) => (value: string) => {
+        handleUpdateInterceptor(name, value);
+    }
+
+    const renderEditor = (name: keyof Interceptors) => {
+        const config = INTERCEPTOR_CONFIG[name as keyof typeof INTERCEPTOR_CONFIG];
+        const hasInterceptor = interceptors?.[name] !== undefined;
+
+        return (
+            <div className="mb-4 last:mb-0">
+                <div className="mb-2 font-medium">{config.title}</div>
+                {hasInterceptor ? (
+                    <MonacoEditor 
+                        value={interceptors![name]!.value} 
+                        language="javascript" 
+                        onBlur={handleEditorBlur(name)} 
+                    />
+                ) : (
+                    <Button type="dashed" size="small" onClick={handleAddInterceptor(name)}>
+                        添加
+                    </Button>
+                )}
+            </div>
+        );
+    };
+
+    const content = useMemo(() => (
+        <div className='w-[450px] overflow-auto' style={{ height: 'calc(100vh - 130px)' }}>
+            {renderEditor('request')}
+            {renderEditor('response')}
+        </div>
+    ), [interceptors, handleUpdateInterceptor]);
 
     return (
         <div className='NetworkInterceptorsPane'>
             <Popover 
                 trigger="click"
                 placement="rightTop"
-                content={
-                <div className='w-[450px] overflow-auto' style={{height: height + 'px'}}>
-                    <div>
-                        <div>请求拦截器</div>
-                        {interceptors.request !== undefined ? 
-                        <MonacoEditor value={interceptors.request.value} language="javascript" onBlur={onChange('request')} />: 
-                        <Button type="dashed" size="small" onClick={onAddLifeCycle('request')}>添加</Button>
-                        }
-                    </div>
-                    <div>
-                        <div>响应拦截器</div>
-                        {interceptors.response !== undefined ? 
-                        <MonacoEditor value={interceptors.response.value} language="javascript" onBlur={onChange('response')} />: 
-                        <Button type="dashed" size="small" onClick={onAddLifeCycle("response")}>添加</Button>
-                        }
-                    </div>
-                </div>
-                }
-                onOpenChange={onOpenChange}
-                open={active}
+                content={content}
+                onOpenChange={handleOpenChange}
+                open={isOpen}
+                destroyTooltipOnHide
             >
-                <ClockCircleOutlined className={cn('text-black/26 text-[22px] cursor-pointer hover:text-inherit', { 'text-inherit': active })}/>
+                <ClockCircleOutlined 
+                    className={cn(
+                        'text-black/26 text-[22px] cursor-pointer hover:text-inherit transition-colors', 
+                        { 'text-inherit': isOpen }
+                    )}
+                />
             </Popover>
         </div>
     )
