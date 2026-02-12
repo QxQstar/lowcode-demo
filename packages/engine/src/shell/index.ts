@@ -2,7 +2,6 @@ import InnerSetters from '../setters'
 import Setters from './setters'
 import InnerPluginManger from '../plugins'
 import PluginManager from './plugins'
-import InnerMaterial from '../material'
 import InnerSkeleton from '../skeleton'
 import Skeleton from './skeleton'
 import InnerProject from '../project'
@@ -11,8 +10,6 @@ import Dragon from './dragon'
 
 export const observableSkeleton = new InnerSkeleton()
 export const observableProject = new InnerProject()
-export const innerMaterial = new InnerMaterial()
-export const material = innerMaterial
 
 export const setters = new Setters(new InnerSetters())
 export const plugins = new PluginManager(new InnerPluginManger())

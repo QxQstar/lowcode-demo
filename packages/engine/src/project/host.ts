@@ -1,8 +1,7 @@
-import { project, material, setters } from "../shell"
+import { project } from "../shell"
 import { DRAG_OVER } from '../eventType'
 import type Project from "./index"
-import { HostSpec, SimulatorSpec, ComponentSpecRaw, Point } from 'vitis-lowcode-types'
-import { getComponentImplUrl, getComponentSetterMap, getComponentImplFromWin } from '../utils'
+import { HostSpec, SimulatorSpec, Point } from 'vitis-lowcode-types'
 import { isDragDataNode } from './dragon'
 import { DragObjectType } from "../types"
 
@@ -15,42 +14,6 @@ export default class Host implements HostSpec {
     constructor(project: Project) {
         this.project = project
 
-    }
-
-    onAssetUpdated = async (additionalPackageNames: string[]) => {
-        const materialMap = new Map<string, ComponentSpecRaw>()
-        additionalPackageNames.forEach(name => {
-            const spec = material.getComponentSpecRaw(name)
-            if (spec) {
-                materialMap.set(name, spec)
-            }
-        })
-        const assetBundles = this.getSimulatorComponentAssets(materialMap);
-        await Promise.allSettled(assetBundles.map(asset => {
-            return new Promise<void>((res, rej) => {
-                if (this.frameDocument) {
-                    const script = this.frameDocument.createElement('script')
-                    script.onload = () => {
-                        script.onload = null
-                        script.onerror = null
-                        res()
-                    }
-                    script.onerror = () => {
-                        script.onload = null
-                        script.onerror = null
-                        rej()
-                    }
-                    this.frameDocument.body.append(script)
-                    script.src = asset.url
-                } else {
-                    res() 
-                }
-            })
-        }))
-
-        this.registerComponentSetters(assetBundles)
-        this.collectComponentImpl(assetBundles)
-        this.rerender()
     }
 
     mountContentFrame = async (frame: HTMLIFrameElement | null) => {
@@ -151,55 +114,6 @@ export default class Host implements HostSpec {
 
             return noId ? this.project.documentModel.getNode(noId): undefined
         }
-    }
-
-    private getSimulatorComponentAssets = (assetMap: Map<string, ComponentSpecRaw>) => {
-        const result: {packageName: string, componentName: string, url: string}[] = []
-
-        for (const [, spec] of assetMap) {
-            // 模板没有组件实现，只有组件规格
-            if (spec.group !== 'template') {
-                result.push({
-                    packageName: spec.packageName,
-                    componentName: spec.componentName,
-                    url: getComponentImplUrl({npm: spec.packageName, version: spec.version})
-                })
-            }
-        }
-
-        return result
-    }
-
-    /**
-     * 注册组件包自带的设置器
-     */
-    private registerComponentSetters = (assetBundles: {packageName: string, componentName: string, url: string}[]) => {
-        assetBundles.forEach(bundle => {
-            const innerSetterMap = getComponentSetterMap(this.frameWindow!, bundle)
-            for (const key of Object.keys(innerSetterMap)) {
-                setters.register({
-                    name: `${bundle.packageName}/${key}`,
-                    view: innerSetterMap[key],
-                })
-            }
-        })
-    }
-
-    /**
-     * 收集低代码组件的实现
-     * @param assetBundles 
-     */
-    private collectComponentImpl = (assetBundles: {packageName: string, componentName: string, url: string}[]) => {
-        const componentMap = new Map()
-
-        assetBundles.forEach(bundle => {
-            const impl = getComponentImplFromWin(this.frameWindow!, bundle)
-            if (impl) {
-                componentMap.set(bundle.componentName, impl)
-            }
-        })
-
-        this.project.designer.addComponentsImpl(componentMap)
     }
 
     getClosestNodeByLocation = (point: Point) => {
