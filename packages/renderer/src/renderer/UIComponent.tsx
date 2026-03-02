@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { NodeSchema } from 'vitis-lowcode-types'
-import useGetDOM from '../hooks/useGetDOM'
 import { PropsContext, GlobalDataContext, ContainerDataContext } from '../context'
 import useHidden from '../hooks/useHidden'
 import { RendererMode } from '../types'
@@ -12,14 +11,13 @@ interface Props {
 }
 
 function Content(props: Props) {
-    const rootRef = useGetDOM(props.schema)
     const context = useContext(PropsContext)
     const Com = context.components.get(props.schema.componentName)
     if (!Com) { return <div>未知的组件</div> }
     const attrs = generateAttrs(props.schema.props)
     const value = useGetInitVal(props.schema.extraProps, props.schema.props.defaultValue)
     return (
-        <Com {...attrs}  ref={rootRef} value={value}/>
+        <Com {...attrs}  data-node-id={props.schema.id} value={value}/>
     )
 }
 

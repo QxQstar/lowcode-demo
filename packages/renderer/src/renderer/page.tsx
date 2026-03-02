@@ -2,7 +2,6 @@ import { useContext, useState } from 'react'
 import { PageSchema } from 'vitis-lowcode-types'
 import { PropsContext, GlobalDataContext, ContainerDataContext } from '../context'
 import BaseComponentRenderer from './baseComponentRenderer'
-import useGetDOM from '../hooks/useGetDOM'
 import useDataSource from '../hooks/useDataSource'
 import { Path } from 'depath'
 import {generateAttrs} from '../generateAttr'
@@ -12,7 +11,6 @@ interface Props {
 
 export default function PageRenderer(props: Props) {
     const propsContext = useContext(PropsContext)
-    const rootRef = useGetDOM(props.schema)
     const [formData, setFormData] = useState({})
     const [formErrors, setFormErrors] = useState({})
     const { loading, data } = useDataSource(props.schema.extraProps.dataSource)
@@ -42,8 +40,7 @@ export default function PageRenderer(props: Props) {
                 <div 
                     {...attrs}
                     data-node-id={props.schema.id} 
-                    className="min-h-full"
-                    ref={rootRef}
+                    className="h-full"
                 >{
                     !props.schema.children.length ? 
                     propsContext.customEmptyElement ? propsContext.customEmptyElement(props.schema): null: 

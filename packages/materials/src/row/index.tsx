@@ -7,5 +7,6 @@ interface Props {
 }
 
 export function Row(props: Props) {
-    return <div className={props.className} style={props.style}>{props.children}</div>
+    const {className, style, children, ...reset} = props;
+    return <div className={className} style={style} {...reset}>{children}</div>
 }

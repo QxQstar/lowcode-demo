@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { NodeSchema } from 'vitis-lowcode-types'
-import useGetDOM from '../hooks/useGetDOM'
 import { PropsContext, GlobalDataContext, ContainerDataContext } from '../context'
 import useHidden from '../hooks/useHidden'
 import useDisabled from "../hooks/useDisabled";
@@ -14,7 +13,6 @@ interface Props {
 }
 
 function Content(props: Props) {
-    const rootRef = useGetDOM(props.schema)
     const { extraProps } = props.schema
     const propsContext = useContext(PropsContext)
     const { updateFormData, formData, pageData } = useContext(GlobalDataContext)
@@ -37,7 +35,7 @@ function Content(props: Props) {
         <div>
             <Com 
                 {...attrs} 
-                ref={rootRef} 
+                data-node-id={props.schema.id} 
                 value={value} 
                 onChange={onChange} 
                 disabled={isDisabled}

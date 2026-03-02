@@ -45,7 +45,6 @@ export class Dragon {
 
     private locate = (locateEvent: LocationEvent) => {
         const container = this.designer.getDropContainer(locateEvent)
-
         if (container) {
             const dropLocation: DropLocation = {
                 index: 0,
@@ -72,11 +71,9 @@ export class Dragon {
                             minIndex = index
                         }
                     }
-                    
                     dropLocation.index = minIndex
                 }
             }
-
             return dropLocation
         }
     }

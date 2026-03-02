@@ -1,6 +1,6 @@
 export default {
   "componentName": "Column",
-  "packageName": "vitis-lowcode-column",
+  "packageName": "vitis-lowcode-materials",
   "title": "列",
   "iconUrl": "https://unpkg.com/vitis-lowcode-column@latest/img/icon.png",
   "description": "这是一个列组件",

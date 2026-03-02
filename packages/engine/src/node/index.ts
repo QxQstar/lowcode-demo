@@ -20,16 +20,16 @@ export default class Node<S extends NodeSchema = NodeSchema> {
     private _settingEntry: SettingTopEntry | undefined
     readonly isFormControl: boolean
 
-    get componentSpec(): ComponentSpec {
-        const result = this.owner.project.designer.componentSpecMap.get(this.packageName)
+    get componentSpec(): ComponentSpec | undefined {
+        const result = this.owner.project.designer.componentSpecMap.get(this.componentName)
         if (!result) {
-            throw `不存在 ${this.packageName} 组件`
+            throw `不存在 ${this.componentName} 组件`
         }
         return result
     }
 
     get title() {
-        return this.componentSpec.title
+        return this.componentSpec?.title
     }
 
     get lastChild(): Node<NodeSchema> | undefined {

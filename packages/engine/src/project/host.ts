@@ -24,11 +24,10 @@ export default class Host implements HostSpec {
             return 
         }
 
-        this.frameDocument = frame.contentDocument
-        this.frameWindow = frame.contentWindow
-        
-
         frame.addEventListener('load', () => {
+            this.frameDocument = frame.contentDocument
+            this.frameWindow = frame.contentWindow
+
             this.frameWindow!.LCSimulatorHost = this
 
              const renderer = this.frameWindow!.SimulatorRenderer
@@ -40,9 +39,6 @@ export default class Host implements HostSpec {
                 this.renderer?.rerender()
             }
         })
-        
-
-        
     }
 
     private setupEvent = () => {
@@ -75,18 +71,22 @@ export default class Host implements HostSpec {
 
 
         this.frameDocument?.addEventListener('drop', async (e: DragEvent) => {
+            e.preventDefault()
+            e.stopPropagation()
             const {dragObject, dropLocation} = this.project.designer.dragon
             if (dragObject && dropLocation) {
                 if (isDragDataNode(dragObject)) {
                     let schema = dragObject.data.schema
-                    console.log(schema,'schema')
                     if (!Array.isArray(schema)) {
                         schema = [schema]
                     }
                     let start = dropLocation.index
                     let lastNodeId: string | undefined
                     schema.forEach(item => {
-                        const node = this.project.documentModel.createNode(item, dropLocation.containerNode)
+                        const node = this.project.documentModel.createNode({
+                            ...item,
+                            children: item.children || []
+                        }, dropLocation.containerNode)
                         dropLocation.containerNode.inertChildAtIndex(node, start)
                         start ++
                         lastNodeId = node.id

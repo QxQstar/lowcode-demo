@@ -1,6 +1,6 @@
 export default {
   "componentName": "Row",
-  "packageName": "vitis-lowcode-row",
+  "packageName": "vitis-lowcode-materials",
   "title": "行",
   "iconUrl": "https://unpkg.com/vitis-lowcode-row@latest/img/icon.png",
   "description": "这是一个行组件",

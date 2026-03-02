@@ -15,7 +15,7 @@ const MainArea: React.FC<Props> = observer((props) => {
         return <Spin size="large" tip="启动中..." className='!mt-[200px]'/>
     }
     return (
-    <div className='relative flex-1 bg-[rgb(236,246,250)]'>
+    <div className='relative flex-1 bg-[rgb(236,246,250)] h-full'>
         <CanvasView />
         <LocationTools />
     </div>

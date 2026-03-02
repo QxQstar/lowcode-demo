@@ -23,7 +23,7 @@ const Workbench: React.FC<Props> = (props) => {
             />
             <div className='relative flex-1'>
                 <LeftArea items={props.skeleton.leftArea.items}/>
-                <div className='flex flex-col border-r border-[rgba(0,0,0,0.06)] ml-[50px] mr-[300px] min-h-full'>
+                <div className='flex flex-col border-r border-[rgba(0,0,0,0.06)] ml-[50px] mr-[300px] h-full'>
                     <ToolBarArea items={props.skeleton.toolbarArea.items}/>
                     <MainArea componentSpecMap={props.project.designer.componentSpecMap}/>
                 </div>

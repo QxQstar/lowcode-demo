@@ -11,7 +11,6 @@ const CanvasView = () => {
                 "react-dom": "https://esm.sh/react-dom@19.2.0",
                 "react-dom/client": "https://esm.sh/react-dom@19.2.0/client",
                 "react/jsx-runtime": "https://esm.sh/react@19.2.0/jsx-runtime",
-                // FIXME: Hardcoded URL, should be configurable or dynamic
                 "vitis-lowcode-renderer": "http://localhost:3000/index.es.js"
             }
         }
@@ -27,7 +26,7 @@ const CanvasView = () => {
     }, [])
 
     return (
-        <div className='h-full relative z-[2]' ref={project.designer.mountViewport}>
+        <div className='h-full relative z-2' ref={project.designer.mountViewport}>
             <iframe
                 srcDoc={canvasHtml}
                 className="border-none h-full w-full"

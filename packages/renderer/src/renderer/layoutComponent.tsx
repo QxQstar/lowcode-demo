@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { LayoutSchema } from 'vitis-lowcode-types'
-import useGetDOM from '../hooks/useGetDOM'
 import useDataSource from '../hooks/useDataSource'
 import BaseComponentRenderer from './baseComponentRenderer'
 import { PropsContext, ContainerDataContext, GlobalDataContext } from '../context'
@@ -13,7 +12,6 @@ interface Props {
 }
 
 function Content(props: Props) {
-    const rootRef = useGetDOM(props.schema)
     const { components, customEmptyElement, rendererMode} = useContext(PropsContext)
     const containerData = useContext(ContainerDataContext)
     const Component = components.get(props.schema.componentName)
@@ -31,7 +29,7 @@ function Content(props: Props) {
         >
             <Component 
                 {...attrs}
-                ref={rootRef}
+                data-node-id={props.schema.id}
             >
                 {!props.schema.children.length ?
                 customEmptyElement && rendererMode === RendererMode.design ? customEmptyElement(props.schema): null

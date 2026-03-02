@@ -9,7 +9,6 @@ export enum RendererMode {
 export interface PropsContextSpec {
     schema?: PageSchema;
     components: Map<string, ElementType>;
-    onCompGetRef?: (schema: NodeSchema, domElement: HTMLElement | null) => void;
     rendererMode?: RendererMode;
     customEmptyElement?: (schema: NodeSchema) => React.ReactNode;
     interceptors: PageSchema['interceptors']
