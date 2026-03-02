@@ -33,6 +33,7 @@ export default class Project extends EventEmitter implements ProjectSpec {
 
     setAssets(specs: MaterialPackage) {
         this.project.designer.buildComponents(specs);
+        this.project.designer.host.setupComponents(specs.url)
     }
 
     setSchema(s: PageSchema) {

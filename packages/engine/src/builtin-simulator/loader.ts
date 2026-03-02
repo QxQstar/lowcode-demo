@@ -1,4 +1,4 @@
-import { makeAutoObservable, observable, runInAction } from 'mobx'
+import { makeAutoObservable, observable } from 'mobx'
 import type {ElementType} from 'react'
 
 class Loader {
@@ -11,7 +11,7 @@ class Loader {
 
   async loadAssets(urls: string[]) {
     const cssUrls = urls.filter(url => url.endsWith('.css'));
-    const jsUrls = urls.filter(url => !url.endsWith('.css'));
+    const jsUrls = urls.filter(url => url.endsWith('.js'));
     await Promise.all([this.loadCss(cssUrls), this.loadJs(jsUrls)]);
   }
 
@@ -32,8 +32,7 @@ class Loader {
   private async loadJs(jsUrls: string[]) {
     const promises = jsUrls.map(async (url) => {
       const module = await import(url);
-      runInAction(() => {
-        for (const key in module) {
+      for (const key in module) {
           this.components.set(key,module[key]);
         }
         if (module.default && typeof module.default === 'object') {
@@ -41,7 +40,6 @@ class Loader {
             this.components.set(key,module.default[key]);
           }
         }
-      });
     });
     await Promise.all(promises);
   }

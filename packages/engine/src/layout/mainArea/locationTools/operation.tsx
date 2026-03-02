@@ -44,7 +44,6 @@ export default observer(function Operation() {
         const currentNode = observableProject.documentModel.currentNode!
         const node = observableProject.documentModel.copyNode(currentNode);
         currentNode.parent?.insertAfter(node, currentNode)
-        observableProject.designer.rerender()
     }
 
     return (

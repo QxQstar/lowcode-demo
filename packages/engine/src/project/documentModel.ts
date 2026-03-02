@@ -44,7 +44,6 @@ export default class DocumentModel {
         if (thisNode) {
             this.nodeMap.delete(nodeId)
             thisNode.parent?.delChild(thisNode)
-            this.project.designer.rerender()
         }
     }
 
@@ -81,6 +80,5 @@ export default class DocumentModel {
             this.interceptors = {}
         }
         this.interceptors[name] = value
-        this.project.designer.rerender()
     }
 }

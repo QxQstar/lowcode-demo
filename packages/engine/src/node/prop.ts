@@ -50,8 +50,6 @@ export default class Prop {
         } else {
             this.value = value
         }
-
-        this.project.designer.rerender()
     }
 
     getValue = (subName?: string) => {

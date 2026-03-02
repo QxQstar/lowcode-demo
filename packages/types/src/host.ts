@@ -4,10 +4,7 @@ import type { Point } from './'
 
 /** 这是渲染器环境提供给设计器环境的方法*/
 export interface SimulatorSpec {
-    /**
-     * 渲染画布
-     */
-    run(): void
+    setupHost(host: HostSpec): void;
     /**
      * 获取离定位点最近的 Node
      * @param point 
@@ -19,14 +16,20 @@ export interface SimulatorSpec {
      */
     getNodeRect(id: string): DOMRect | undefined
     /**
-     * 重新渲染
+     * 渲染画布
      */
-    rerender(): Promise<void>
+    rerender(): void
     /**
      * 获取 DOM 元素的 Node id
      * @param elem 
      */
     getNodeIdByDOMElem(elem: HTMLElement): string | undefined
+
+    /**
+     * 加载组件
+     * @param urls 
+     */
+    loadAssets(urls: string[]): Promise<void>
 }
 
 /**这是设计器环境给渲染器环境提供的方法 */

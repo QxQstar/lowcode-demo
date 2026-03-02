@@ -73,7 +73,7 @@ export interface ComponentSpecInstance {
 }
 
 export interface MaterialPackage {
-  url: string;
+  url: string[];
   packageName: string;
   components: ComponentSpecRaw[];
 }

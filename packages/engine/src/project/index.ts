@@ -73,7 +73,7 @@ const defaultPageSchema: PageSchema = {
 }
 
 export default class Project  implements ObservableProjectSpec{
-    readonly designer = new Designer(this)
+    readonly designer: Designer
     readonly documentModel: DocumentModel
 
     get schema() {
@@ -91,6 +91,7 @@ export default class Project  implements ObservableProjectSpec{
         })
         
         this.documentModel = new DocumentModel(this,schema)
+        this.designer = new Designer(this)
     }
 
     setSchema(schema: PageSchema) {

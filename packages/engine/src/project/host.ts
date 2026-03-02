@@ -3,16 +3,20 @@ import type Project from "./index"
 import { HostSpec, SimulatorSpec, Point } from 'vitis-lowcode-types'
 import { isDragDataNode } from './dragon'
 import { DragObjectType } from "../types"
+import { reaction } from 'mobx'
 
 export default class Host implements HostSpec {
     frameDocument?: Document | null
     frameWindow?: Window | null
     readonly project: Project
     private renderer?: SimulatorSpec
+    cachedUnloadedAssets: string[] = []
 
     constructor(project: Project) {
         this.project = project
-
+        reaction(() => this.project.schema, () => {
+            this.rerender();
+        })
     }
 
     mountContentFrame = async (frame: HTMLIFrameElement | null) => {
@@ -30,9 +34,10 @@ export default class Host implements HostSpec {
              const renderer = this.frameWindow!.SimulatorRenderer
             if (renderer) {
                 this.renderer = renderer
+                this.renderer?.setupHost(this);
+                this.setupComponents([])
                 this.setupEvent()
                 this.renderer?.rerender()
-                this.renderer?.run()
             }
         })
         
@@ -87,14 +92,12 @@ export default class Host implements HostSpec {
                         lastNodeId = node.id
                     })
                     if (lastNodeId) {
-                        await this.rerender()
                         this.project.designer.selectNode(lastNodeId)
                     }
                    
                 } else {
                     dragObject.node.parent?.delChild(dragObject.node)
                     dropLocation.containerNode.inertChildAtIndex(dragObject.node, dropLocation.index)
-                    await this.rerender()
                     this.project.designer.selectNode(dragObject.node.id)
                 }
             }
@@ -126,5 +129,14 @@ export default class Host implements HostSpec {
 
     rerender = async () => {
         await this.renderer?.rerender()
+    }
+
+    async setupComponents(url: string[]) {
+        this.cachedUnloadedAssets.push(...url);
+        if (!this.renderer || this.cachedUnloadedAssets.length === 0) {
+            return;
+        }
+        await this.renderer?.loadAssets(this.cachedUnloadedAssets);
+        this.cachedUnloadedAssets = [];
     }
 }

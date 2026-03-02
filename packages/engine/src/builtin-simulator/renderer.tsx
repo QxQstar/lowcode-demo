@@ -3,16 +3,17 @@ import { RendererMode } from 'vitis-lowcode-renderer'
 import reactDomCollector, { DomNode } from './reactInstanceCollector'
 import { EmptyComponent } from './emptyComponent/page'
 import SimulatorRendererView from './view'
-import observerData from './store'
+import { HostSpec } from 'vitis-lowcode-types'
 import { loader } from './loader'
 
 import { createRoot } from 'react-dom/client'
 
-import { getHost, deferUtil } from './utils'
-
 
 class SimulatorRenderer implements SimulatorSpec {
-    private isRan: boolean = false
+    host: HostSpec
+    setupHost(host: HostSpec) {
+        this.host = host
+    }
 
     getClosestNodeIdByLocation = (point: Point): string | undefined => {
         // 第一步：找出包含 point 的全部 dom 节点
@@ -49,6 +50,10 @@ class SimulatorRenderer implements SimulatorSpec {
         return elem.getAttribute('data-node-id') || undefined
     }
 
+    get schema() {
+        return this.host?.project.schema;
+    }
+
     toggleLoading = (show: boolean) => {
         const loading = document.getElementById('loadingWarp')
         if (loading) {
@@ -56,35 +61,19 @@ class SimulatorRenderer implements SimulatorSpec {
         }
     }
 
-    loadAssets(urls: string[]) {
-        loader.loadAssets(urls)
-    }
-
-    rerender = async () => {
-        const host = getHost()
-        observerData.schema = host?.project.schema
-        await deferUtil.waitMounted()
-    }
-
-    run() {
+    async loadAssets(urls: string[]) {
+        this.toggleLoading(true);
+        await loader.loadAssets(urls)
         this.toggleLoading(false)
-        if (this.isRan) {
-            return
-        }
+    }
 
-        this.isRan = true
-
-        document.documentElement.classList.add('h-full')
-        document.body.classList.add('h-full', 'p-0', 'm-0')
-
-        const container = document.createElement('div')
-        container.id = 'simulatorRenderer'
-        container.className = 'simulator-renderer h-full'
-        document.body.appendChild(container)
+    rerender() {
+        const container = document.getElementById('app')!;
 
         const root = createRoot(container)
         root.render(
             <SimulatorRendererView
+                schema={this.schema}
                 rendererMode={RendererMode.design}
                 onCompGetRef={(schema: NodeSchema, domElement: HTMLElement | null) => {
                     reactDomCollector.mount(schema.id!, domElement)
