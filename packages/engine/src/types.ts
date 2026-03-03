@@ -1,6 +1,6 @@
 import type ComponentSpec from './project/componentSpec'
 import type Node from './node';
-import { SetterConfig } from 'vitis-lowcode-types'
+import { NodeSchema, SetterConfig } from 'vitis-lowcode-types'
 
 export enum DragObjectType {
     // eslint-disable-next-line no-shadow
@@ -14,7 +14,7 @@ export interface DragNodeObject {
   }
   export interface DragNodeDataObject {
     type: DragObjectType.NodeData;
-    data: ComponentSpec;
+    data: NodeSchema
   }
 
 export type DragObject = DragNodeObject | DragNodeDataObject

@@ -1,3 +1,5 @@
+import type { NodeSchema } from "./schema";
+
 export interface DragonSpec {
-    onNodeDataDragStart: (packageName: string) => void
+    onNodeDataDragStart: (schema: NodeSchema) => void
 }

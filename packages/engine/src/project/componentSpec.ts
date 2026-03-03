@@ -27,10 +27,6 @@ export default class ComponentSpec implements ComponentSpecInstance{
         return this.rawData.group || 'base'
     }
 
-    get iconUrl() {
-        return this.rawData.iconUrl
-    }
-
     get packageName() {
         return this.rawData.packageName
     }
@@ -51,6 +47,10 @@ export default class ComponentSpec implements ComponentSpecInstance{
         return this.rawData.title
     }
 
+    get snippets() {
+        return this.rawData.snippets;
+    }
+
     private get hasDataSource() {
         return this.rawData.advanced?.component?.isContainer
     }
@@ -66,50 +66,6 @@ export default class ComponentSpec implements ComponentSpecInstance{
 
     private get hasHiddenRule() {
         return !this.rawData.advanced?.component?.isContainer || this.rawData.advanced.component.containerType !== 'Page'
-    }
-
-    private get type () {
-        return this.rawData.group === 'template' ? 'template' : 'component'
-    }
-
-    /**
-     * 这个是初始 schema
-     */
-    get schema(): NodeSchema | NodeSchema[]{
-        // 模板的第一层不表示任何组件，从第二层开始才表示组件
-        if (this.type === 'template') {
-            // 从第二层开始
-            return (this.rawData.children || []).map(child => {
-                const childSpec = new ComponentSpec(child)
-                return childSpec.schema as NodeSchema
-            })
-
-        } else {
-            const props: {[attr: string]: any} = {}
-            this.rawData.props.forEach(prop => {
-                props[prop.name] = prop.defaultValue
-            })
-            const supports = this.rawData.advanced?.supports
-            if (supports?.styles) {
-                props['style'] = ''
-            }
-            const children = (this.rawData.children || []).map((child) => {
-                const childSpec = new ComponentSpec(child)
-                return childSpec.schema as NodeSchema
-            })
-
-            return {
-                componentName: this.componentName,
-                props,
-                extraProps: this.extraProps,
-                isContainer: !!this.rawData.advanced?.component?.isContainer,
-                children,
-                containerType: this.rawData.advanced?.component?.containerType || undefined,
-                packageName: this.rawData.packageName,
-                isFormControl: this.rawData.advanced?.component?.isFormControl
-            }
-        }
-        
     }
 
     private parseRawData = () => {

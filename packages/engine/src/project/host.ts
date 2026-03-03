@@ -76,25 +76,9 @@ export default class Host implements HostSpec {
             const {dragObject, dropLocation} = this.project.designer.dragon
             if (dragObject && dropLocation) {
                 if (isDragDataNode(dragObject)) {
-                    let schema = dragObject.data.schema
-                    if (!Array.isArray(schema)) {
-                        schema = [schema]
-                    }
-                    let start = dropLocation.index
-                    let lastNodeId: string | undefined
-                    schema.forEach(item => {
-                        const node = this.project.documentModel.createNode({
-                            ...item,
-                            children: item.children || []
-                        }, dropLocation.containerNode)
-                        dropLocation.containerNode.inertChildAtIndex(node, start)
-                        start ++
-                        lastNodeId = node.id
-                    })
-                    if (lastNodeId) {
-                        this.project.designer.selectNode(lastNodeId)
-                    }
-                   
+                    const node = this.project.documentModel.createNode(dragObject.data, dropLocation.containerNode)
+                    dropLocation.containerNode.inertChildAtIndex(node, dropLocation.index)
+                    this.project.designer.selectNode(node.id)
                 } else {
                     dragObject.node.parent?.delChild(dragObject.node)
                     dropLocation.containerNode.inertChildAtIndex(dragObject.node, dropLocation.index)

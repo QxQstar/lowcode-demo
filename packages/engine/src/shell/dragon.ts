@@ -1,5 +1,5 @@
 import type { Dragon as InnerDragon } from '../project/dragon'
-import { DragonSpec } from 'vitis-lowcode-types'
+import { DragonSpec, NodeSchema } from 'vitis-lowcode-types'
 import { DragObjectType } from '../types'
 
 export default class Dragon implements DragonSpec{
@@ -9,13 +9,10 @@ export default class Dragon implements DragonSpec{
         this.innerDragon = innerDragon
     }
 
-    onNodeDataDragStart = (componentName: string) => {
-        if (this.innerDragon.designer.componentSpecMap.has(componentName)) {
-            this.innerDragon.onDragStart({
-                type: DragObjectType.NodeData,
-                data: this.innerDragon.designer.componentSpecMap.get(componentName)!
-            })
-        }
-        
+    onNodeDataDragStart = (schema: NodeSchema) => {
+        this.innerDragon.onDragStart({
+            type: DragObjectType.NodeData,
+            data: schema
+        })
     }
 }
