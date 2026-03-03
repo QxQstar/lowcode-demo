@@ -26,6 +26,7 @@ export default {
         level: 1,
         children: '一级标题',
       },
+      children: []
     },
   },
   {
@@ -37,6 +38,7 @@ export default {
         level: 2,
         children: '二级标题',
       },
+      children: []
     },
   },
   {
@@ -48,6 +50,7 @@ export default {
         level: 3,
         children: '三级标题',
       },
+      children: []
     },
   },
   {
@@ -59,6 +62,7 @@ export default {
         level: 4,
         children: '四级标题',
       },
+      children: []
     },
   },
   ]

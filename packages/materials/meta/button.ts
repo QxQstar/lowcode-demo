@@ -34,6 +34,7 @@ export default {
         children: '主按钮',
       },
     },
+    children: []
   },
   {
     title: '次按钮',
@@ -44,6 +45,7 @@ export default {
         type: 'default',
         children: '次按钮',
       },
+      children: []
     },
   },
   {
@@ -55,6 +57,7 @@ export default {
         type: 'danger',
         children: '危险按钮',
       },
+      children: []
     },
   },
   {
@@ -66,6 +69,7 @@ export default {
         type: 'text',
         children: '文字按钮',
       },
+      children: []
     },
   },
   {
@@ -77,6 +81,7 @@ export default {
         type: 'dashed',
         children: '虚框按钮',
       },
+      children: []
     },
   },
   {
@@ -88,6 +93,7 @@ export default {
         type: 'link',
         children: '链接按钮',
       },
+      children: []
     },
   },
   ]

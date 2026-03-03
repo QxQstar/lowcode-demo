@@ -47,6 +47,7 @@ export default {
         editable: true,
         children: 'text',
       },
+      children: []
     },
   },
   ]

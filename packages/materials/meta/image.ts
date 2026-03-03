@@ -28,6 +28,7 @@ export default {
         width: 120,
         preview: false,
       },
+      children: []
     },
   }
   ]
