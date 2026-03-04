@@ -1,6 +1,7 @@
 import { useState, useLayoutEffect, useEffect, useMemo, useCallback } from "react"
 import MonacoEditor from 'vitis-lowcode-monaco-editor'
-import { SnippetsOutlined } from '@ant-design/icons';
+import { CodeOutlined } from '@ant-design/icons';
+import cn from 'classnames'
 import { Popover } from 'antd';
 import type { PageSchema, PluginContext } from 'vitis-lowcode-types'
 
@@ -81,7 +82,14 @@ export default function SchemaPane(props: PluginContext) {
                 onOpenChange={handleOpenChange}
                 open={isOpen}
             >
-                <SnippetsOutlined />
+                <div 
+                    className={cn(
+                        'flex items-center justify-center h-8 rounded transition-colors duration-200 cursor-pointer',
+                        isOpen ? 'text-blue-600 bg-blue-50' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+                    )}
+                >
+                    <CodeOutlined className="text-xl"/>
+                </div>
             </Popover>
         </div>
     );

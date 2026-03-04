@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import cn from 'classnames'
 import { Popover } from 'antd';
-import { AppstoreOutlined } from '@ant-design/icons';
+import { SlackOutlined } from '@ant-design/icons';
 import type { PluginContext, ComponentSpecInstance, NodeSchema } from 'vitis-lowcode-types'
 
 // 常量定义：面板高度计算的偏移量和最小值
@@ -167,11 +167,11 @@ const ComponentsPane = (props: PluginContext) => {
             >
                 <div 
                     className={cn(
-                        'flex items-center justify-center w-8 h-8 rounded transition-colors duration-200 cursor-pointer',
+                        'flex items-center justify-center h-8 rounded transition-colors duration-200 cursor-pointer',
                         isPanelOpen ? 'text-blue-600 bg-blue-50' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
                     )}
                 >
-                    <AppstoreOutlined className="text-xl" />
+                    <SlackOutlined className="text-xl"/>
                 </div>
             </Popover>
         </div>
