@@ -34,6 +34,10 @@ export default class Designer implements DesignerSpec {
         this.componentSpecMap.set('Page', new ComponentSpec(PageComponentsSpec))
     }
 
+    init() {
+        this.host.init()
+    }
+
     buildComponents = (specs: MaterialPackage) => {
         specs.components.forEach(spec => {
             this.componentSpecMap.set(spec.componentName, new ComponentSpec(spec))

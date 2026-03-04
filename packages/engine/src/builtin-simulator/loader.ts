@@ -1,8 +1,11 @@
 import { makeAutoObservable, observable } from 'mobx'
 import type {ElementType} from 'react'
+import { Page } from './components/page'
 
 class Loader {
-  components: Map<string, ElementType> = new Map();
+  components: Map<string, ElementType> = new Map([
+    ["Page", Page]
+  ]);
   constructor(){
     makeAutoObservable(this, {
       components: observable.shallow

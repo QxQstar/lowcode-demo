@@ -1,5 +1,5 @@
 export default {
-  "componentName": "Column",
+  "componentName": "Col",
   "packageName": "vitis-lowcode-materials",
   "title": "列",
   "version": "1.1.0",

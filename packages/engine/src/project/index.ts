@@ -89,9 +89,9 @@ export default class Project  implements ObservableProjectSpec{
             designer: false,
             documentModel: false
         })
-        
-        this.documentModel = new DocumentModel(this,schema)
         this.designer = new Designer(this)
+        this.documentModel = new DocumentModel(this,schema)
+        this.designer.init()
     }
 
     setSchema(schema: PageSchema) {

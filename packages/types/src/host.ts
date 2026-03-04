@@ -1,5 +1,6 @@
 import type { ObservableProjectSpec } from './project'
 import type { Point } from './'
+import type { NodeAPI } from './node';
 
 
 /** 这是渲染器环境提供给设计器环境的方法*/
@@ -39,4 +40,6 @@ export interface HostSpec {
      * 设计器环境的 Project 实例
      */
     project: ObservableProjectSpec
+
+    getNodeById(id: string): NodeAPI | undefined
 }

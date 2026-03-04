@@ -16,8 +16,8 @@ export default class DocumentModel {
         makeAutoObservable(this, {
             project: false
         })
-        this.open(schema)
         this.project = project
+        this.open(schema)
         this.interceptors = schema.interceptors
     }
 

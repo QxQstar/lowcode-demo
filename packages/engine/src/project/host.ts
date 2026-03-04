@@ -1,6 +1,6 @@
 import { project } from "../shell"
 import type Project from "./index"
-import { HostSpec, SimulatorSpec, Point } from 'vitis-lowcode-types'
+import { HostSpec, SimulatorSpec, Point, NodeAPI } from 'vitis-lowcode-types'
 import { isDragDataNode } from './dragon'
 import { DragObjectType } from "../types"
 import { reaction } from 'mobx'
@@ -14,6 +14,9 @@ export default class Host implements HostSpec {
 
     constructor(project: Project) {
         this.project = project
+    }
+
+    init() {
         reaction(() => this.project.schema, () => {
             this.rerender();
         })
@@ -122,5 +125,9 @@ export default class Host implements HostSpec {
         }
         await this.renderer?.loadAssets(this.cachedUnloadedAssets);
         this.cachedUnloadedAssets = [];
+    }
+
+    getNodeById(id: string) {
+        return this.project.documentModel.getNode(id)
     }
 }

@@ -1,4 +1,4 @@
-import { NodeSchema, ContainerSchema } from 'vitis-lowcode-types'
+import { NodeSchema, ContainerSchema, NodeAPI } from 'vitis-lowcode-types'
 import { makeAutoObservable } from 'mobx'
 import type ComponentSpec from '../project/componentSpec'
 import Props from './props'
@@ -6,16 +6,14 @@ import { uniqueId } from '../utils'
 import type DocumentModel from '../project/documentModel'
 import SettingTopEntry from '../setting/SettingTopEntry'
 
-export default class Node<S extends NodeSchema = NodeSchema> {
+export default class Node<S extends NodeSchema = NodeSchema> implements NodeAPI{
     readonly id: string;
     readonly componentName: string;
-    readonly isContainer: boolean;
     parent: Node<NodeSchema> | undefined;
     readonly owner: DocumentModel
     protected children: Node<NodeSchema>[]
     readonly props: Props
     readonly extraProps: Props
-    readonly containerType?: ContainerSchema['containerType']
     readonly packageName: string
     private _settingEntry: SettingTopEntry | undefined
     readonly isFormControl: boolean
@@ -32,6 +30,14 @@ export default class Node<S extends NodeSchema = NodeSchema> {
         return this.componentSpec?.title
     }
 
+    get isContainer() {
+        return !!this.componentSpec?.isContainer
+    }
+
+    get containerType() {
+        return this.componentSpec?.containerType
+    }
+
     get lastChild(): Node<NodeSchema> | undefined {
         return this.children[this.children.length - 1]
     }
@@ -44,18 +50,14 @@ export default class Node<S extends NodeSchema = NodeSchema> {
         makeAutoObservable(this, {
             id: false,
             componentName: false,
-            isContainer: false,
             owner: false,
             isFormControl: false,
-            containerType: false
         })
 
         this.parent = parent
         this.id = initSchema.id || uniqueId('node')
         this.componentName = initSchema.componentName
         this.packageName = initSchema.packageName
-        this.isContainer = initSchema.isContainer
-        this.containerType = initSchema.containerType
         this.isFormControl = !!initSchema.isFormControl
         this.owner = owner
 

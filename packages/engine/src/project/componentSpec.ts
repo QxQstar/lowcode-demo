@@ -55,6 +55,14 @@ export default class ComponentSpec implements ComponentSpecInstance{
         return this.rawData.advanced?.component?.isContainer
     }
 
+    get isContainer() {
+        return this.rawData.advanced?.component?.isContainer
+    }
+
+    get containerType() {
+        return this.rawData.advanced?.component?.containerType
+    }
+
     private get hasLinkage() {
         return this.hasHiddenRule
         || this.isFormControl

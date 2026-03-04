@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useState, createElement } from 'react'
 import { PageSchema } from 'vitis-lowcode-types'
 import { PropsContext, GlobalDataContext, ContainerDataContext } from '../context'
 import BaseComponentRenderer from './baseComponentRenderer'

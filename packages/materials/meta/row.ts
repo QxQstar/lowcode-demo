@@ -10,7 +10,7 @@ export default {
       "parentWhitelist": [
         "Page"
       ],
-      "childWhitelist": ["Column"]
+      "childWhitelist": ["Col"]
     },
     "supports": {
       "styles": true,
