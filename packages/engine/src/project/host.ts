@@ -1,6 +1,6 @@
 import { project } from "../shell"
 import type Project from "./index"
-import { HostSpec, SimulatorSpec, Point, NodeAPI } from 'vitis-lowcode-types'
+import { HostSpec, SimulatorSpec, Point } from 'vitis-lowcode-types'
 import { isDragDataNode } from './dragon'
 import { DragObjectType } from "../types"
 import { reaction } from 'mobx'
@@ -63,9 +63,10 @@ export default class Host implements HostSpec {
 
         this.frameDocument?.addEventListener('mousemove', (e: MouseEvent) => {
             const node = this.project.designer.host.getClosestNodeByLocation(e)
-            this.project.documentModel.hoverNode(node?.id)
-            this.project.designer.detection.computeHoveredPosition(node?.id)
-            
+            if (node?.enableSelected) {
+                this.project.documentModel.hoverNode(node?.id)
+                this.project.designer.detection.computeHoveredPosition(node?.id)
+            }
         })
 
         this.frameDocument?.addEventListener('mouseleave', (_: MouseEvent) => {
@@ -93,7 +94,12 @@ export default class Host implements HostSpec {
 
         this.frameDocument?.addEventListener('mouseup', (e: MouseEvent) => {
             const nodeId = this.getClosestNodeByLocation(e)?.id
-            this.project.designer.selectNode(nodeId)
+            if (nodeId) {
+                const node = this.project.documentModel.getNode(nodeId)
+                node?.enableSelected && this.project.designer.selectNode(nodeId)
+            } else {
+                this.project.designer.selectNode(undefined)
+            }
         })
     }
 

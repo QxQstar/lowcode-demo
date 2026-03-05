@@ -1,66 +1,74 @@
-import React, { useState, useRef, useLayoutEffect } from "react";
-import { observer } from 'mobx-react-lite'
-import { observableProject } from '../../../shell'
-import { UnorderedListOutlined, DeleteOutlined, CopyOutlined } from '@ant-design/icons'
-import { Popover } from 'antd';
+import { useCallback, useRef, useLayoutEffect, useState } from "react";
+import { observer } from 'mobx-react-lite';
+import { DeleteOutlined, CopyOutlined } from '@ant-design/icons';
 import type Node from "../../../node";
+import type DocumentModel from '../../../project/documentModel';
+import type Designer from '../../../project/designer';
 
-const ComponentTreeOutLook = (props: {node?: Node | null; level: number}) => {
-    if (props.node) {
-        return (
-            <>
-                <div style={{marginRight: props.level * 8 + 'px', }} className="text-white text-[10px] bg-[#1890ff] px-[2px] cursor-pointer">{props.node.title}</div>
-                {<ComponentTreeOutLook node={props.node.parent} level={props.level + 1}/>}
-            </>
-        )
-    } 
+const TOOLBAR_CONTAINER_CLASS = "absolute bg-[#1890ff] text-white px-2 py-1 z-2 rounded-[2px] space-x-2 flex items-center -translate-x-full";
+const ICON_CLASS = "text-[16px] cursor-pointer hover:text-gray-200 transition-colors";
 
-    return null
+interface Props {
+    selectedNodePosition: DOMRect;
+    currentNode: Node;
+    documentModel: DocumentModel;
+    designer: Designer;
 }
 
-export default observer(function Operation() {
-    const [style, setStyle] = useState<React.CSSProperties>({})
-    const rootRef = useRef<HTMLDivElement>(null)
-    useLayoutEffect(() => {
-        const rect = observableProject.designer.detection.selectedNodePosition
-        if (rect && observableProject.documentModel.currentNode) {
-            setStyle({
-                left: rect.right - (rootRef.current?.clientWidth || 0),
-                top: rect.top,
-                visibility: 'visible'
-            })
-        } else {
-            setStyle({})
+export default observer(function Operation(props: Props) {
+    const { currentNode, selectedNodePosition, documentModel, designer } = props;
+    const [size, setSize] = useState({width: 0, height: 0});
+    const ref = useRef<HTMLDivElement>(null);
+
+    useLayoutEffect(()=> {
+        if (ref.current) {
+            const { height, width } = ref.current.getBoundingClientRect();
+            setSize({height, width})
+        } 
+    }, [])
+
+    // 删除操作
+    const handleDelete = useCallback(() => {
+        if (currentNode?.id) {
+            documentModel.delNode(currentNode.id);
+            designer.selectNode(undefined);
         }
-    
-    }, [observableProject.designer.detection.selectedNodePosition, observableProject.documentModel.currentNode])
+    }, [currentNode, documentModel, designer]);
 
-    const onDel = () => {
-        observableProject.documentModel.delNode(observableProject.documentModel.selectedNodeId!)
-        observableProject.designer.selectNode(undefined)
-    }
+    // 复制操作
+    const handleCopy = useCallback(() => {
+        const node = documentModel.copyNode(currentNode);
+        // 插入到当前节点之后
+        currentNode.parent?.insertAfter(node, currentNode);
+    }, [currentNode, documentModel]);
 
-    const onCopy = () => {
-        const currentNode = observableProject.documentModel.currentNode!
-        const node = observableProject.documentModel.copyNode(currentNode);
-        currentNode.parent?.insertAfter(node, currentNode)
-    }
+    const canDelete = currentNode.componentSpec?.unableDel !== true;
+    const canCopy = currentNode.componentSpec?.unableCopy !== true;
 
     return (
-        <div className="absolute invisible bg-[#1890ff] text-white px-[8px] z-[2] rounded-[2px] space-x-[8px]" style={style} ref={rootRef}>
-            {observableProject.documentModel.currentNode && 
-            <Popover 
-                placement="bottomRight"
-                trigger="hover"
-                showArrow={false}
-                content={<ComponentTreeOutLook node={observableProject.documentModel.currentNode} level={0}/>}
-                overlayClassName="!py-[2px] !px-0 !bg-transparent [&_.ant-popover-inner-content]:p-0 [&_.ant-popover-inner-content]:bg-transparent"
-            >
-                <UnorderedListOutlined className="text-[16px] cursor-pointer"/>
-            </Popover>
-            }
-            {observableProject.documentModel.currentNode?.componentSpec.unableDel === false && <DeleteOutlined className="text-[16px] cursor-pointer" onClick={onDel}/>}
-            {observableProject.documentModel.currentNode?.componentSpec.unableCopy === false && <CopyOutlined className="text-[16px] cursor-pointer" onClick={onCopy}/>}
+        <div 
+            className={TOOLBAR_CONTAINER_CLASS}
+            style={{
+                left: selectedNodePosition.right,
+                top: selectedNodePosition.top - size.height < 0 ? selectedNodePosition.top + selectedNodePosition.height + 2: selectedNodePosition.top - size.height - 2
+            }}
+            ref={ref}
+        >
+            {canDelete && (
+                <DeleteOutlined 
+                    className={ICON_CLASS} 
+                    onClick={handleDelete} 
+                    title="删除"
+                />
+            )}
+            
+            {canCopy && (
+                <CopyOutlined 
+                    className={ICON_CLASS} 
+                    onClick={handleCopy} 
+                    title="复制"
+                />
+            )}
         </div>
-    )
-})
+    );
+});

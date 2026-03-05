@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useMemo } from 'react'
 
 interface Props {
     type: 'solid' | 'dashed'
@@ -7,19 +7,21 @@ interface Props {
 }
 
 export default function DetectBorder(props: Props) {
-    const [style, setStyle] = useState<React.CSSProperties>({})
-    useEffect(() => {
-        if (props.position && props.show) {
-            setStyle({
-                borderStyle: props.type,
-                left: props.position.left,
-                width: props.position.width,
-                height: props.position.height,
-                top: props.position.top
-            })
-        } else {
-            setStyle({})
+    const { type, position, show } = props
+
+    const style = useMemo<React.CSSProperties>(() => {
+        if (position && show) {
+            return {
+                borderStyle: type,
+                left: position.left,
+                width: position.width,
+                height: position.height,
+                top: position.top,
+                display: 'block'
+            }
         }
-    }, [props.show, props.position])
-    return <div className='absolute border-none border-[#1890ff] border-[1px] z-[1]' style={style}/>
+        return { display: 'none' }
+    }, [show, position, type])
+
+    return <div className='absolute border-none border-[#1890ff] border z-1 pointer-events-none' style={style}/>
 }

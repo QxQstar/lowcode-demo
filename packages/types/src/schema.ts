@@ -12,8 +12,6 @@ export interface ProjectSchema {
 export interface PageSchema extends ContainerSchema {
     containerType: 'Page';
     componentName: 'Page';
-    lifeCycles: LifeCycles;
-    interceptors: Interceptors;
     children: LayoutSchema[];
 }
 

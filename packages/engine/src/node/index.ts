@@ -30,6 +30,10 @@ export default class Node<S extends NodeSchema = NodeSchema> implements NodeAPI{
         return this.componentSpec?.title
     }
 
+    get enableSelected() {
+        return this.componentSpec?.enableSelected
+    }
+
     get isContainer() {
         return !!this.componentSpec?.isContainer
     }

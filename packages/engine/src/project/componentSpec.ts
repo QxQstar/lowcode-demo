@@ -43,6 +43,10 @@ export default class ComponentSpec implements ComponentSpecInstance{
         return this.rawData.advanced?.component?.containerType === 'Page'
     }
 
+    get enableSelected() {
+        return this.rawData.advanced?.component?.containerType !== 'Page'
+    }
+
     get title() {
         return this.rawData.title
     }
@@ -51,29 +55,12 @@ export default class ComponentSpec implements ComponentSpecInstance{
         return this.rawData.snippets;
     }
 
-    private get hasDataSource() {
-        return this.rawData.advanced?.component?.isContainer
-    }
-
     get isContainer() {
         return this.rawData.advanced?.component?.isContainer
     }
 
     get containerType() {
         return this.rawData.advanced?.component?.containerType
-    }
-
-    private get hasLinkage() {
-        return this.hasHiddenRule
-        || this.isFormControl
-    }
-
-    private get isFormControl() {
-        return this.rawData.advanced?.component?.isFormControl
-    }
-
-    private get hasHiddenRule() {
-        return !this.rawData.advanced?.component?.isContainer || this.rawData.advanced.component.containerType !== 'Page'
     }
 
     private parseRawData = () => {
@@ -97,43 +84,6 @@ export default class ComponentSpec implements ComponentSpecInstance{
         if (this.rawData.advanced?.component?.isFormControl) {
             this.extraProps.name = ''
         }
-
-        if (this.hasDataSource) {
-            this.extraProps.dataSource = {
-                type: 'DataSource',
-                value: {
-                    url: '',
-                    method: 'GET',
-                    requestHandler: {
-                        type: 'JSFunction',
-                        value: 'function requestHandler(params){return params}'
-                    },
-                    responseHandler: {
-                        type: 'JSFunction',
-                        value: 'function responseHandler(response) { return response.data }'
-                    }
-                }
-            }
-        }
-
-        if (this.hasHiddenRule) {
-            this.extraProps.isHidden = {
-                type: 'JSFunction',
-                value: 'function isHidden(pageData, containerData, formData){ return false }'
-            }
-        }
-
-        if (this.isFormControl) {
-            this.extraProps.isDisabled = {
-                type: 'JSFunction',
-                value: 'function isDisabled(pageData, containerData, formData){ return false }'
-            }
-
-            this.extraProps.getValue = {
-                type: 'JSFunction',
-                value: ''
-            }
-        }
     }
 
     private genConfigure = () => {
@@ -152,83 +102,6 @@ export default class ComponentSpec implements ComponentSpecInstance{
                     }
                 ]
             })
-        }
-
-        if (this.hasDataSource) {
-            this.configure.push({
-                type: 'group',
-                title: '数据源',
-                name: 'dataSource',
-                fields: [
-                    {
-                        type: 'field',
-                        title: 'tip',
-                        name: 'tip',
-                        isExtra: true,
-                        setters: [{ 
-                            name: 'TextSetter', 
-                            props: {
-                                defaultValue: '这里的配置将发送网络请求，它返回的数据优先级高于从父容器取值',
-                                style: {
-                                    color: 'red',
-                                    fontSize: '12px'
-                                }
-                            } 
-                        }]
-                    },
-                    {
-                        type: 'field',
-                        title: 'URL',
-                        name: 'url',
-                        parentName: 'dataSource',
-                        isExtra: true,
-                        setters: [{ 
-                            name: 'StringSetter'
-                        }]
-                    },
-                    {
-                        type: 'field',
-                        title: '请求方式',
-                        name: 'method',
-                        parentName: 'dataSource',
-                        isExtra: true,
-                        setters: [{ 
-                            name: 'RadioGroupSetter',
-                            props: {
-                                options: [{label: 'GET', value: 'GET'}, {label: 'POST', value: 'POST'}]
-                            }
-                        }]
-                    },
-                    {
-                        type: 'field',
-                        title: '请求处理器',
-                        parentName: 'dataSource',
-                        name: 'requestHandler',
-                        isExtra: true,
-                        setters: [{
-                            name: 'FunctionSetter',
-                        }]
-                    },
-                    {
-                        type: 'field',
-                        title: '响应处理器',
-                        parentName: 'dataSource',
-                        name: 'responseHandler',
-                        isExtra: true,
-                        setters: [{
-                            name: 'FunctionSetter',
-                        }]
-                    }
-                ]
-            })
-        }
-
-        if (this.hasLinkage) {
-            this.configure.push(this.getLinkageConfig())
-        }
-
-        if (this.isFormControl) {
-            this.configure.push(this.getVerifyConfig())
         }
 
     }
@@ -303,81 +176,6 @@ export default class ComponentSpec implements ComponentSpecInstance{
                 }))
             ]
         }
-    }
-
-    private getLinkageConfig = (): FieldGroupConfig => {
-        const getHiddenRule = (): FieldSingleConfig | undefined => {
-            if (this.hasHiddenRule) {
-                return {
-                    type: 'field',
-                    title: '隐藏',
-                    name: 'isHidden',
-                    isExtra: true,
-                    setters: [{name: 'FunctionSetter'}]
-                }
-            }
-        }
-
-        const getDisableRule = (): FieldSingleConfig | undefined => {
-            if (this.isFormControl) {
-                return {
-                    type: 'field',
-                    title: '禁用',
-                    name: 'isDisabled',
-                    isExtra: true,
-                    setters: [{name: 'FunctionSetter'}]
-                }
-            } 
-        }
-
-        const getValueRule = (): FieldSingleConfig | undefined => {
-            if (this.isFormControl) {
-                return {
-                    type: 'field',
-                    title: '求值',
-                    name: 'getValue',
-                    isExtra: true,
-                    setters: [{name: 'FunctionSetter'}]
-                }
-            } 
-        }
-
-        const hiddenRule = getHiddenRule()
-        const disableRule = getDisableRule()
-        const valueRule = getValueRule()
-        const config: FieldGroupConfig = {
-            type: 'group',
-            title: '联动',
-            name: 'linkage',
-            fields: []
-        }
-
-        if (hiddenRule) {
-            config.fields.push(hiddenRule)
-        }
-        if (disableRule) {
-            config.fields.push(disableRule)
-        }
-        if (valueRule) {
-            config.fields.push(valueRule)
-        }
-        return config
-    }
-
-    private getVerifyConfig = (): FieldGroupConfig => {
-        const config: FieldGroupConfig = {
-            type: 'group',
-            title: '校验',
-            name: 'verify',
-            fields: [{
-                type: 'field',
-                isExtra: true,
-                name: 'verifyRules',
-                setters: [{name: 'VerifyRulesSetter'}]
-            }]
-        }
-
-        return config
     }
 
     isCanInclude(componentSpec: ComponentSpec) {
