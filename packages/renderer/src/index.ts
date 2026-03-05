@@ -1,7 +1,2 @@
-// import { Props } from './renderer'
-
-// export type IRendererProps = Omit<Props,'interceptors'>
-// export { default as Renderer } from './renderer'
-// export { RendererMode } from './types'
-
-export * from './src2'
+export { default as Renderer } from './Renderer';
+export { RendererProps } from './types'

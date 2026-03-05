@@ -1,40 +1,16 @@
-import { PageSchema, NodeSchema } from 'vitis-lowcode-types'
-import { ElementType } from 'react'
+import { ElementType, FunctionComponent, ComponentClass, ReactNode, ReactElement, Attributes } from 'react';
+import { PageSchema, NodeSchema } from 'vitis-lowcode-types';
 
-export enum RendererMode {
-    design,
-    runtime
+export interface RendererProps extends RendererContextType{
+    schema: PageSchema;
 }
 
-export interface PropsContextSpec {
-    schema?: PageSchema;
+export interface RendererContextType {
     components: Map<string, ElementType>;
-    rendererMode?: RendererMode;
-    customEmptyElement?: (schema: NodeSchema) => React.ReactNode;
-    interceptors: PageSchema['interceptors']
-}
-
-export interface GlobalDataContextSpec {
-    // 这是页面数据，通过网络请求得来
-    pageData: undefined | null | any[] | {[attr: string]: any};
-    pageLoading: boolean;
-    // 这是用户填写的表单数据
-    formData: undefined | null | {[attr: string]: any}
-    // 表单数据错误提示语
-    formErrors: undefined | {[attr: string]: any}
-    // 更新 formData 的值
-    updateFormData: (path: string, value: any) => void
-    // 更新 formErrors 的值
-    updateFormErrors: (path: string, value: any) => void
-}
-
-export interface ContainerDataContextSpec {
-    data: GlobalDataContextSpec['pageData'];
-    dataLoading: boolean;
-}
-
-export interface DataGroup {
-    pageData: GlobalDataContextSpec['pageData'],
-    containerData: ContainerDataContextSpec['data'],
-    formData: GlobalDataContextSpec['formData']
+    notfoundComponent: FunctionComponent<NodeSchema>;
+    customCreateElement: <P extends {}>(
+        type: FunctionComponent<P> | ComponentClass<P> | string,
+        props?: Attributes & P | null,
+        ...children: ReactNode[]
+    ) => ReactElement<P>;
 }

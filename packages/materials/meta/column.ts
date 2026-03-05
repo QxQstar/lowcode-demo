@@ -22,5 +22,6 @@ export default {
       "containerType": "Layout",
       "isFormControl": false
     }
-  }
+  },
+  snippets: []
 }
