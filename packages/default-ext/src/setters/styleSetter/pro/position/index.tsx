@@ -27,13 +27,14 @@ export default (props: layoutProps) => {
   }, []);
 
   return (
-    <Collapse defaultActiveKey={['0']}>
+    <Collapse defaultActiveKey={['0']} size='small' className='mt-3!'>
       <Panel header="位置" key="0">
         <Row title={position.title} styleData={styleData} styleKey="position" onStyleChange={() => {}}>
           <Select
             options={position.dataList}
             value={styleData.position}
             allowClear={true}
+             size='small'
             onChange={(val) => onStyleChange([{ styleKey: 'position', value: val }])}
           />
         </Row>
@@ -48,6 +49,7 @@ export default (props: layoutProps) => {
             precision={2}
             onChange={onZIndexChange}
             value={styleData['zIndex']}
+            size="small"
           />
         </Row>
 

@@ -75,7 +75,7 @@
     ]
   },
 
-  "positionTemplete": {
+  "positionTemplate": {
     "dataList": [
       {
         "value": "topLeft",

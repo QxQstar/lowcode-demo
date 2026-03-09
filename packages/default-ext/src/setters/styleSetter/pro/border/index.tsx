@@ -21,12 +21,13 @@ const BorderDirectionMap = {
   border: 'border',
 };
 
-interface fontProps {
+interface BorderProps {
   styleData: StyleData | any;
   onStyleChange: onStyleChange;
   unit?: string;
 }
-export default (props: fontProps) => {
+
+export default (props: BorderProps) => {
   const { styleData, onStyleChange, unit } = props;
   const { borderType } = fontConfig;
   const [selBorderType, setSelBorderType] = useState<string>();
@@ -73,8 +74,21 @@ export default (props: fontProps) => {
     ]);
   };
 
+  const renderBorderIcon = (key: string, iconType: string) => (
+    <div
+      className={
+        borderDirection === key
+          ? 'text-[#5584ff] cursor-pointer'
+          : 'cursor-pointer'
+      }
+      onClick={() => onIconClick(key)}
+    >
+      <Icon type={iconType} />
+    </div>
+  );
+
   return (
-    <Collapse defaultActiveKey={['0']}>
+    <Collapse defaultActiveKey={['0']} size='small' className='mt-3!'>
       <Panel header="边框" className="" key="0">
         <Row
           title={borderType.title}
@@ -85,7 +99,7 @@ export default (props: fontProps) => {
           value={selBorderType}
         />
 
-        {selBorderType == 'fixedBorder' && (
+        {selBorderType === 'fixedBorder' && (
           <Row title={' '} styleKey="borderRadius" {...props}>
             <div className="flex flex-row flex-1">
               <Slider
@@ -104,7 +118,7 @@ export default (props: fontProps) => {
           </Row>
         )}
 
-        {selBorderType == 'partBorder' && (
+        {selBorderType === 'partBorder' && (
           <>
             <Row
               title={' '}
@@ -164,61 +178,15 @@ export default (props: fontProps) => {
           <div className="flex flex-row items-center flex-1 justify-between">
             <div className="border-icon-container">
               <div className="ml-5">
-                <div
-                  className={
-                    borderDirection === BorderDirectionMap.borderTop
-                      ? 'text-[#5584ff] cursor-pointer'
-                      : 'cursor-pointer'
-                  }
-                  onClick={() => onIconClick('borderTop')}
-                >
-                  <Icon type="icon--shangbiankuang" />
-                </div>
+                {renderBorderIcon(BorderDirectionMap.borderTop, 'icon--shangbiankuang')}
               </div>
               <div className="flex flex-row">
-                <div
-                  className={
-                    borderDirection === BorderDirectionMap.borderLeft
-                      ? 'text-[#5584ff] cursor-pointer'
-                      : 'cursor-pointer'
-                  }
-                  onClick={() => onIconClick('borderLeft')}
-                >
-                  <Icon type="icon--zuobiankuang" />
-                </div>
-
-                <div
-                  className={
-                    borderDirection === BorderDirectionMap.border
-                      ? 'text-[#5584ff] cursor-pointer'
-                      : 'cursor-pointer'
-                  }
-                  onClick={() => onIconClick('border')}
-                >
-                  <Icon type="icon--quanbubiankuang" />
-                </div>
-                <div
-                  className={
-                    borderDirection === BorderDirectionMap.borderRight
-                      ? 'text-[#5584ff] cursor-pointer'
-                      : 'cursor-pointer'
-                  }
-                  onClick={() => onIconClick('borderRight')}
-                >
-                  <Icon type="icon--youbiankuang" />
-                </div>
+                {renderBorderIcon(BorderDirectionMap.borderLeft, 'icon--zuobiankuang')}
+                {renderBorderIcon(BorderDirectionMap.border, 'icon--quanbubiankuang')}
+                {renderBorderIcon(BorderDirectionMap.borderRight, 'icon--youbiankuang')}
               </div>
               <div className="ml-5">
-                <div
-                  className={
-                    borderDirection === BorderDirectionMap.borderBottom
-                      ? 'text-[#5584ff] cursor-pointer'
-                      : 'cursor-pointer'
-                  }
-                  onClick={() => onIconClick('borderBottom')}
-                >
-                  <Icon type="icon--xiabiankuang" />
-                </div>
+                {renderBorderIcon(BorderDirectionMap.borderBottom, 'icon--xiabiankuang')}
               </div>
             </div>
 
@@ -237,6 +205,7 @@ export default (props: fontProps) => {
                     allowClear
                     style={{ marginTop: '10px' }}
                     value={styleData[borderDirection + 'Style']}
+                     size='small'
                     onChange={(value) => {
                       onBorderTypeChange(borderDirection + 'Style', value);
                     }}

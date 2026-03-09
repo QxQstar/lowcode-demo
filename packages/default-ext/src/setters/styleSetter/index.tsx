@@ -4,118 +4,59 @@ import Layout from './pro/layout';
 import Font from './pro/font';
 import Border from './pro/border';
 import Background from './pro/background';
-import CssCode from './components/css-code';
+import Position from './pro/position';
 import type { StyleData } from './utils/types';
-import Icon from './components/icon';
-import { transformStringToCSSProperties,transformCSSPropertiesToString } from './utils'
 
-interface StyleSetterProps extends SetterCommonProps{
-  value: string | undefined;
+interface StyleSetterProps extends SetterCommonProps {
+  value: React.CSSProperties | undefined;
+  unit?: string;
+  placeholderScale?: number;
 }
 
-interface State {
-  styleData: React.CSSProperties;
-  cssCodeVisiable: boolean;
-  initFlag: boolean
-}
+const StyleSetter: React.FC<StyleSetterProps> = (props) => {
+  const { value, onChange, unit = 'px', placeholderScale = 1 } = props;
+  const [styleData, setStyleData] = React.useState<React.CSSProperties>({});
 
-class StyleSetter extends React.PureComponent<StyleSetterProps> {
-  static defaultProps = {
-    // 默认单位
-    unit: 'px',
-    // 默认计算尺寸缩放
-    placeholderScale: 1,
-  };
-
-  state: State = { styleData: {}, cssCodeVisiable: false, initFlag: false };
-
-  componentDidMount() {
-    const { value } = this.props;
+  // 监听 value 变化，同步更新内部状态
+  React.useEffect(() => {
     if (value) {
-      this.setState({
-        styleData: transformStringToCSSProperties(value),
-      });
+      setStyleData(value);
     }
+  }, [value]);
 
-    this.setState({
-      initFlag: true,
-    });
-  }
+  const handleStyleChange = (changes: StyleData[]) => {
+    const newStyleData = { ...styleData };
 
-  changeCssCodeVisiable = (visible: boolean) => {
-    this.setState({
-      cssCodeVisiable: !visible,
+    changes?.forEach(({ styleKey, value }) => {
+      if (value == null) {
+        delete (newStyleData as any)[styleKey];
+      } else {
+        (newStyleData as any)[styleKey] = value;
+      }
     });
+
+    setStyleData(newStyleData);
+    onChange?.(newStyleData);
   };
 
-  /**
-   * style更改
-   * @param styleKey
-   * @param value
-   */
-  onStyleChange = (styleDataList: Array<StyleData>) => {
-    let styleData: React.CSSProperties | any = Object.assign({}, this.state.styleData);
-    styleDataList &&
-      styleDataList.map((item) => {
-        if (item.value == undefined || item.value == null) {
-          delete styleData[item.styleKey];
-        } else {
-          styleData[item.styleKey] = item.value;
-        }
-      });
-
-    this.onStyleDataChange(styleData)
+  const commonProps = {
+    ...props,
+    unit,
+    placeholderScale,
+    styleData,
+    onStyleChange: handleStyleChange,
   };
 
-  onStyleDataChange = (styleData: React.CSSProperties) => {
-    this.setState({
-      styleData,
-    });
-    const { onChange } = this.props;
-    const str = transformCSSPropertiesToString(styleData)
-    console.log(str)
-    onChange && onChange(str);
-  };
-
-  render() {
-    const { styleData, cssCodeVisiable, initFlag } = this.state;
-    console.log('styleData', styleData);
-    return (
-        <div className="">
-          <div className="mb-2.5">
-            <div
-              onClick={() => this.changeCssCodeVisiable(false)}
-              className={cssCodeVisiable ? 'text-[#5584ff] cursor-pointer' : 'cursor-pointer'}
-            >
-              <Icon type="icon-CSS"></Icon>
-            </div>
-          </div>
-          <Layout onStyleChange={this.onStyleChange} styleData={styleData} {...this.props}></Layout>
-
-          <Font onStyleChange={this.onStyleChange} styleData={styleData} {...this.props}></Font>
-          <Background
-            onStyleChange={this.onStyleChange}
-            styleData={styleData}
-            {...this.props}
-          ></Background>
-          {/* <Position
-            onStyleChange={this.onStyleChange}
-            styleData={styleData}
-            {...this.props}
-          ></Position> */}
-          <Border onStyleChange={this.onStyleChange} styleData={styleData} {...this.props}></Border>
-          {initFlag && (
-            <CssCode
-              visible={cssCodeVisiable}
-              styleData={styleData}
-              onStyleDataChange={this.onStyleDataChange}
-              changeCssCodeVisiable={this.changeCssCodeVisiable}
-            ></CssCode>
-          )}
-        </div>
-    );
-  }
-}
+  return (
+    <div className="style-setter-container">
+      <Layout {...commonProps} />
+      <Font {...commonProps} />
+      <Background {...commonProps} />
+      <Position {...commonProps} />
+      <Border {...commonProps} />
+    </div>
+  );
+};
 
 export default {
   view: StyleSetter,

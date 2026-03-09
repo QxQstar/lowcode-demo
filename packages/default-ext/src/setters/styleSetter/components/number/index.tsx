@@ -1,21 +1,23 @@
 import { InputNumber } from 'antd';
+import type { FC, CSSProperties } from 'react';
 import type { StyleData, onStyleChange } from '../../utils/types';
 import { addUnit, removeUnit, isEmptyValue } from '../../utils';
-interface numberProps {
+
+interface NumberProps {
   styleKey: string;
   styleData: StyleData | any;
   onStyleChange: onStyleChange;
   unit?: string;
   min?: number;
   max?: number;
-  style?: any;
+  style?: CSSProperties;
   className?: string;
   field?: any;
   placeholderScale?: number;
   useComputedStyle?: boolean;
 }
 
-export default (props: numberProps) => {
+const NumberSetter: FC<NumberProps> = (props) => {
   const {
     styleData,
     styleKey,
@@ -27,26 +29,29 @@ export default (props: numberProps) => {
     className = '',
   } = props;
 
-
-  const onNumberChange = (styleKey: string, value: number, unit?: string) => {
+  const handleNumberChange = (value: number | null) => {
     onStyleChange([
       {
         styleKey,
-        value: unit ? addUnit(value, unit) : value,
+        value: unit && value !== null ? addUnit(value, unit) : value,
       },
     ]);
   };
 
+  const currentValue = unit ? removeUnit(styleData[styleKey]) : styleData[styleKey];
 
   return (
     <InputNumber
       style={style}
       className={className}
-      value={unit ? removeUnit(styleData[styleKey]) : styleData[styleKey]}
+      value={currentValue}
       min={isEmptyValue(min) ? Number.MIN_SAFE_INTEGER : min}
       max={isEmptyValue(max) ? Number.MAX_SAFE_INTEGER : max}
-      onChange={(val) => onNumberChange(styleKey, val, unit)}
-      addonAfter={unit ? unit : ''}
-    ></InputNumber>
+      onChange={handleNumberChange}
+      suffix={unit}
+      size='small'
+    />
   );
 };
+
+export default NumberSetter;

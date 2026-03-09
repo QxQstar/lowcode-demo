@@ -6,46 +6,39 @@ import ColorInput from '../../components/color-input';
 import type { StyleData, onStyleChange } from '../../utils/types';
 import { Collapse, Input } from 'antd';
 import borderConfig from './config.json';
+
 const Panel = Collapse.Panel;
 
-interface fontProps {
+interface BackgroundProps {
   styleData: StyleData | any;
   onStyleChange: onStyleChange;
   unit?: string;
 }
-export default (props: fontProps) => {
+
+export default (props: BackgroundProps) => {
   const { onStyleChange, styleData } = props;
   const { backgroundType } = borderConfig;
   const [bgType, setBgType] = useState<string>();
 
   const onBgTypeChange = (styleDataList: Array<StyleData>) => {
-    if (styleDataList) {
+    if (styleDataList && styleDataList.length > 0) {
       setBgType(styleDataList[0].value as string);
     }
   };
 
   const formatBgImgUrl = (url: string) => {
-    if (url && url != '') {
-      return 'url(' + url + ')';
-    } else {
-      return undefined;
+    if (url && url !== '') {
+      return `url(${url})`;
     }
+    return undefined;
   };
 
   const backToBgImgUrl = (styleUrl: string) => {
     if (styleUrl) {
-      // const reg = /^url\(.*\)/;
-      // var result = styleUrl.match(reg);
-      let newUrl = styleUrl.substring(styleUrl.indexOf('(') + 1, styleUrl.indexOf(')'));
-
-      return newUrl;
-      // return styleUrl.substring(
-      //   styleUrl.indexOf("(") + 1,
-      //   styleUrl.indexOf(")") - 1
-      // );
-    } else {
-      return '';
+      const match = styleUrl.match(/url\((.*)\)/);
+      return match ? match[1] : '';
     }
+    return '';
   };
 
   const initData = () => {
@@ -70,8 +63,8 @@ export default (props: fontProps) => {
   };
 
   return (
-    <Collapse defaultActiveKey={['0']}>
-      <Panel header="背景" className="" key='0'>
+    <Collapse defaultActiveKey={['0']} size='small' className='mt-3!'>
+      <Panel header="背景" className="" key="0">
         <Row
           title={backgroundType.title}
           dataList={backgroundType.dataList}
@@ -79,22 +72,23 @@ export default (props: fontProps) => {
           {...props}
           onStyleChange={onBgTypeChange}
           value={bgType}
-        ></Row>
+        />
 
-        {bgType == 'color' && (
+        {bgType === 'color' && (
           <Row title={' '} styleKey="" {...props}>
-            <ColorInput styleKey={'backgroundColor'} {...props} inputWidth="100%"></ColorInput>
+            <ColorInput styleKey={'backgroundColor'} {...props} inputWidth="100%" />
           </Row>
         )}
 
-        {bgType == 'bgImg' && (
+        {bgType === 'bgImg' && (
           <Row title={' '} styleKey="" {...props}>
             <Input
-              addonBefore={<Icon type="icon-suffix-url" style={{ margin: 4 }} />}
+              prefix={<Icon type="icon-suffix-url" style={{ margin: 4 }} />}
               placeholder="输入图片url"
               style={{ width: '100%' }}
               value={backToBgImgUrl(styleData['backgroundImage'])}
               onChange={onInputChange}
+              size='small'
             />
           </Row>
         )}
