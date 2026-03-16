@@ -1,6 +1,5 @@
 import type { SetterCommonProps } from 'vitis-lowcode-types'
-import { Radio } from 'antd'
-import type { RadioChangeEvent } from 'antd'
+import { Switch } from 'antd'
 
 export interface Props extends SetterCommonProps {
     // 在这里写设置器特有的props
@@ -9,21 +8,20 @@ export interface Props extends SetterCommonProps {
 
 
 function BoolSetter(props: Props) {
-    const onChange = (event: RadioChangeEvent) => {
+    const onChange = (checked: boolean) => {
         if (props.onChange) {
-            props.onChange(event.target.value)
+            props.onChange(checked)
         }
     }
 
     return (
-        <Radio.Group 
-            value={props.value} 
+        <Switch 
+            checked={props.value} 
             onChange={onChange}
+            checkedChildren="是"
+            unCheckedChildren="否"
             size="small"
-        >
-            <Radio value={true}>是</Radio>
-            <Radio value={false}>否</Radio>
-        </Radio.Group>
+        />
     )
 }
 

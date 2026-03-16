@@ -21,6 +21,7 @@ function SelectSetter(props: Props) {
             onChange={onChange}
             options={props.options}
             size="small"
+            style={{width: 150}}
         />
     )
 }

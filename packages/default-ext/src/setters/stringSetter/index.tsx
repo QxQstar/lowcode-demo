@@ -15,7 +15,7 @@ function StringSetter(props: Props) {
         }
     }
 
-    return <Input value={props.value} onChange={onChange} size="small"/>
+    return <Input value={props.value} onChange={onChange} size="small" style={{width: 150}}/>
 }
 
 export default {

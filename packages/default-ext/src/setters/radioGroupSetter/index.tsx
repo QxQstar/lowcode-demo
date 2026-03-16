@@ -17,7 +17,7 @@ function RadioGroupSetter(props: Props) {
     }
 
     return (
-        <Radio.Group value={props.value} onChange={onChange} size="small">
+        <Radio.Group value={props.value} onChange={onChange} size="small" optionType="button">
             {(props.options || []).map(option => (<Radio value={option.value} key={option.value}>{option.label}</Radio>))}
         </Radio.Group>
     )

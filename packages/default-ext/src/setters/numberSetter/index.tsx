@@ -16,7 +16,7 @@ function NumberSetter(props: Props) {
         }
     }
 
-    return <InputNumber value={props.value} onChange={onChange} size="small" step={props.step}/>
+    return <InputNumber value={props.value} onChange={onChange} size="small" step={props.step} style={{width: 150}}/>
 }
 
 export default {
