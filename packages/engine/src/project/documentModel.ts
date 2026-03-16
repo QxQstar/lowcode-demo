@@ -1,4 +1,4 @@
-import { PageSchema, NodeSchema, LifeCycles, JSFunction, Interceptors } from 'vitis-lowcode-types'
+import { PageSchema, NodeSchema } from 'vitis-lowcode-types'
 import { makeAutoObservable } from 'mobx'
 import Node from '../node'
 import type Project from './index'
@@ -9,8 +9,6 @@ export default class DocumentModel {
     selectedNodeId?: string
     hoveredNodeId?: string
     readonly project: Project
-    lifeCycles: LifeCycles = {}
-    interceptors: PageSchema['interceptors'] = {}
 
     constructor(project: Project,schema: PageSchema) {
         makeAutoObservable(this, {
@@ -18,15 +16,10 @@ export default class DocumentModel {
         })
         this.project = project
         this.open(schema)
-        this.interceptors = schema.interceptors
     }
 
     get schema() {
-        return {
-            ...this.rootNode.export(), 
-            lifeCycles: this.lifeCycles,
-            interceptors: this.interceptors
-        }
+        return this.rootNode.export()
     }
 
     get currentNode() {
@@ -55,7 +48,6 @@ export default class DocumentModel {
     }
 
     open(schema: PageSchema) {
-        this.lifeCycles = schema.lifeCycles
         this.rootNode = this.createNode<PageSchema>(schema, undefined)
     }
 
@@ -69,16 +61,5 @@ export default class DocumentModel {
 
     hoverNode(id?: string) {
         this.hoveredNodeId = id
-    }
-
-    updateLifeCycles(name: keyof LifeCycles, value?: JSFunction) {
-        this.lifeCycles[name] = value
-    }
-
-    updateInterceptors(name: keyof Interceptors, value?: JSFunction) {
-        if (!this.interceptors) {
-            this.interceptors = {}
-        }
-        this.interceptors[name] = value
     }
 }

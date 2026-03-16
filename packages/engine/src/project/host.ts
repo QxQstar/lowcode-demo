@@ -19,6 +19,10 @@ export default class Host implements HostSpec {
     init() {
         reaction(() => this.project.schema, () => {
             this.rerender();
+            // 渲染完成后再计算dom的位置
+            setTimeout(() => {
+                this.project.designer.detection.computeSelectedPosition(this.project.documentModel.selectedNodeId)
+            }, 500)
         })
     }
 

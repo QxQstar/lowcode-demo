@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 import Designer from './designer';
 import DocumentModel from './documentModel'
-import { PageSchema, ObservableProjectSpec, LifeCycles, JSFunction, Interceptors } from 'vitis-lowcode-types'
+import { PageSchema, ObservableProjectSpec } from 'vitis-lowcode-types'
 
 const defaultPageSchema: PageSchema = {
     componentName: 'Page',
@@ -11,12 +11,6 @@ const defaultPageSchema: PageSchema = {
     children: [],
     props: {
         style: ''
-    },
-    extraProps: {
-        id: {
-            type: 'JSRunFunction',
-            value: 'node => node.id'
-        },
     },
 }
 
