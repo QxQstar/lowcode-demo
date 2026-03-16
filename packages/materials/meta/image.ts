@@ -3,7 +3,36 @@ export default {
   "packageName": "vitis-lowcode-materials",
   "title": "图片",
   "version": "1.1.0",
-  "props": [],
+  "props": [
+    {
+      "name": "src",
+      "setter": {
+        "name": "StringSetter",
+      },
+      "description": "图片地址",
+    },
+    {
+      "name": "preview",
+      "setter": {
+        "name": "BoolSetter",
+      },
+      "description": "支持预览",
+    },
+    {
+      "name": "width",
+      "setter": {
+        "name": "NumberSetter",
+      },
+      "description": "宽度",
+    },
+    {
+      "name": "height",
+      "setter": {
+        "name": "NumberSetter",
+      },
+      "description": "高度",
+    },
+  ],
   "group": "base",
   "advanced": {
     "supports": {

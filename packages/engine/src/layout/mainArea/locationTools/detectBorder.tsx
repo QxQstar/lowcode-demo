@@ -23,5 +23,5 @@ export default function DetectBorder(props: Props) {
         return { display: 'none' }
     }, [show, position, type])
 
-    return <div className='absolute border-none border-[#1890ff] border z-1 pointer-events-none' style={style}/>
+    return <div className='absolute border-none border-[#1890ff] z-1 pointer-events-none border-2' style={style}/>
 }

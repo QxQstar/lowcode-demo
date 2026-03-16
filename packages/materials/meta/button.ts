@@ -10,7 +10,32 @@ export default {
   "packageName": "vitis-lowcode-materials",
   "title": "按钮",
   "version": "1.1.0",
-  "props": [],
+  "props": [
+    {
+      "name": "children",
+      "setter": {"name": "StringSetter"},
+      "description": "内容",
+    },
+    {
+      "name": "size",
+      "setter": {
+        "name": "RadioGroupSetter",
+        "props": {
+          "options": [
+            {"label": "小", "value": "small"},
+            {"label": "中", "value": "medium"},
+            {"label": "大", "value": "large"}
+          ]
+        }
+      },
+      "description": "尺寸",
+    },
+    {
+      "name": "disabled",
+      "setter": {"name": "BoolSetter"},
+      "description": "禁用",
+    },
+  ],
   "group": "base",
   "advanced": {
     "supports": {

@@ -28,7 +28,6 @@ const NodeRenderer: FunctionComponent<NodeRendererProps> = ({ schema }) => {
         const renderedChildren: ReactNode[] = (children || []).map((childSchema) => (
             <NodeRenderer key={childSchema.id} schema={childSchema} />
         ));
-        console.log(componentName, renderedChildren)
         return customCreateElement(
             Component,
             { ...props, key: id, 'data-node-id': id } as any,

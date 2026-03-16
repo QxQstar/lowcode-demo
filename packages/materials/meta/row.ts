@@ -3,7 +3,57 @@ export default {
   "packageName": "vitis-lowcode-materials",
   "title": "行",
   "version": "1.1.0",
-  "props": [],
+  "props": [
+    {
+      "name": "align",
+      "setter": {
+        "name": "SelectSetter",
+        "props": {
+          "options": [
+            {"label": "上", "value": "top"},
+            {"label": "中", "value": "middle"},
+            {"label": "下", "value": "bottom"},
+            {"label": "拉伸", "value": "stretch"}
+          ]
+        }
+      },
+      "description": "垂直对齐",
+    },
+    {
+      "name": "gutter",
+      "setter": {
+        "name": "NumberSetter",
+        "props": {
+          "min": 0,
+          "max": 24
+        }
+      },
+      "description": "栅格间隔",
+    },
+    {
+      "name": "justify",
+      "description": "水平排列",
+      "setter": {
+        "name": "SelectSetter",
+        "props": {
+          "options": [
+            {"label": "开始", "value": "start"},
+            {"label": "结束", "value": "end"},
+            {"label": "居中", "value": "center"},
+            {"label": "等分", "value": "space-around"},
+            {"label": "两端对其", "value": "space-between"}
+          ]
+        }
+      },
+    },
+    {
+      "name": "wrap",
+      "description": "自动换行",
+      "setter": {
+        "name": "BoolSetter"
+      }
+    }
+  ],
   "group": "layout",
   "advanced": {
     "nestingRule": {

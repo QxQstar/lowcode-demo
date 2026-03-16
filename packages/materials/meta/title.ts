@@ -3,7 +3,49 @@ export default {
   "packageName": "vitis-lowcode-materials",
   "title": "标题",
   "version": "1.1.0",
-  "props": [],
+  "props": [
+    {
+      "name": "delete",
+      "setter": {"name": "BoolSetter"},
+      "description": "删除线样式",
+    },
+    {
+      "name": "copyable",
+      "setter": {"name": "BoolSetter"},
+      "description": "可拷贝",
+    },
+    {
+      "name": "disabled",
+      "setter": {"name": "BoolSetter"},
+      "description": "禁用",
+    },
+    {
+      "name": "editable",
+      "setter": {"name": "BoolSetter"},
+      "description": "可编辑",
+    },
+    {
+      "name": "ellipsis",
+      "setter": {"name": "BoolSetter"},
+      "description": "自动溢出省略",
+    },
+    {
+      "name": "level",
+      "setter": {
+        "name": "SelectSetter",
+        "props": {
+          "options": [
+            {"label": "一级", "value": 1},
+            {"label": "二级", "value": 2},
+            {"label": "三级", "value": 3},
+            {"label": "四级", "value": 4},
+            {"label": "五级", "value": 5}
+          ]
+        }
+      },
+      "description": "重要程度",
+    }
+  ],
   "group": "base",
   "advanced": {
     "supports": {

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { observer } from 'mobx-react-lite'
-import { Breadcrumb, Tabs } from 'antd';
+import { Tabs } from 'antd';
 import type Designer  from '../../project/designer'
 import SettingPanel from './settingPanel';
 
@@ -21,31 +21,22 @@ const RightArea: React.FC<Props> = observer((props) => {
     const onChangeTab = (activeTab: string) => {
         setActiveTab(activeTab)
     }
-
-    const renderBreadcrumb = () => {
-        const items: {label: string; key: string}[] = []
+    const componentsPath = useMemo(() => {
         let node = props.designer?.settingTopEntry?.owner
+        const path: string[] = [];
         while (node) {
-            items.push({
-                label: node.title,
-                key: node.id
-            })
+            path.push(node.title || node.componentName)
             node = node.parent
         }
-
-        return (
-            <Breadcrumb>
-                <Breadcrumb.Item menu={{ items }}>组件</Breadcrumb.Item>
-            </Breadcrumb>
-        )
-    }
+        return path.join(' > ')
+    }, [props.designer?.settingTopEntry?.owner]);
 
     const settingEntry = props.designer?.settingTopEntry
     if (!settingEntry) {
-        return <div className='absolute top-0 right-0 bottom-0 w-[300px] p-[10px] z-[1] overflow-auto'>请在画布上选中节点</div>
+        return <div className='absolute top-0 right-0 bottom-0 w-[300px] text-center z-1 overflow-auto pt-10 text-slate-500 text-sm'>请在画布上选中节点</div>
     }
     if (!settingEntry.fields.length) {
-        return <div className='absolute top-0 right-0 bottom-0 w-[300px] p-[10px] z-[1] overflow-auto'>该组件暂无配置</div>
+        return <div className='absolute top-0 right-0 bottom-0 w-[300px] text-center pt-10 z-1 overflow-auto text-slate-500 text-sm'>该组件暂无配置</div>
     }
     const items = settingEntry.fields.map(filed => {
         return {
@@ -56,14 +47,16 @@ const RightArea: React.FC<Props> = observer((props) => {
     })
 
     return (
-    <div className='absolute top-0 right-0 bottom-0 w-[300px] p-[10px] z-[1] overflow-auto'>
-        {renderBreadcrumb()}
-        <Tabs
-            size="small"
-            items={items}
-            activeKey={activeTab} 
-            onChange={onChangeTab}
-        />
+    <div className='absolute top-0 right-0 bottom-0 w-[300px] z-1 overflow-auto text-slate-500 text-sm'>
+        <div className='border-b border-slate-200 px-3 py-2'>{componentsPath}</div>
+        <div className='px-3'>
+            <Tabs
+                size="small"
+                items={items}
+                activeKey={activeTab} 
+                onChange={onChangeTab}
+            />
+        </div>
     </div>
     )
 })
