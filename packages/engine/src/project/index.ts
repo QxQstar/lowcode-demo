@@ -12,6 +12,7 @@ const defaultPageSchema: PageSchema = {
     props: {
         style: ''
     },
+    extraProps: {}
 }
 
 export default class Project  implements ObservableProjectSpec{
